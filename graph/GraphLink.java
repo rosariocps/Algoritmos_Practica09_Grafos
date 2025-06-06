@@ -12,19 +12,42 @@ public class GraphLink<E> {
         listVertex = new ListaEnlazada<>();
     }
 
-    public void insertVertex(E data) {
-        if (searchVertex(data) == null) {
-            listVertex.insertLast(new Vertex<>(data));
+    // INSERTAR VÉRTICE – siguiendo el pseudocódigo exacto
+    public void insertVertex(E dato) {
+        // Paso 1: buscar el dato en la listaVertex del grafo
+        if (searchVertex(dato) != null) {
+            throw new RuntimeException("El vértice ya existe");
         }
+
+        // Si no existe
+        Vertex<E> nuevoVertex = new Vertex<>(dato); // crear nuevoVertex(dato)
+        listVertex.insertLast(nuevoVertex);         // ListaVertex.add(nuevoVertex)
     }
 
-    public void insertEdge(E verOri, E verDes) {
-        Vertex<E> ori = searchVertex(verOri);
-        Vertex<E> des = searchVertex(verDes);
-        if (ori == null || des == null) return;
+    // INSERTAR ARISTA (grafo NO dirigido) – según pseudocódigo
+    public void insertEdge(E vertexO, E vertexD, int weight) {
+        // 1. Validar que existan vertexO y vertexD en la lista de vértices
+        Vertex<E> origen = searchVertex(vertexO);
+        Vertex<E> destino = searchVertex(vertexD);
 
-        ori.listAdj.insertLast(new Edge<>(des));
-        des.listAdj.insertLast(new Edge<>(ori)); // Grafo no dirigido
+        if (origen == null || destino == null) {
+            throw new RuntimeException("Uno o ambos vértices no existen");
+        }
+
+        // 2. Crear nueva arista de O → D
+        Edge<E> nuevoEdge1 = new Edge<>(destino, weight);
+
+        // 3. Crear nueva arista de D → O
+        Edge<E> nuevoEdge2 = new Edge<>(origen, weight);
+
+        // 4. Insertar ambas aristas en las listas correspondientes
+        origen.listAdj.insertLast(nuevoEdge1);
+        destino.listAdj.insertLast(nuevoEdge2);
+    }
+
+    // Mantengo también la versión sin peso como adicional
+    public void insertEdge(E verOri, E verDes) {
+        insertEdge(verOri, verDes, -1);
     }
 
     public Vertex<E> searchVertex(E data) {
@@ -67,14 +90,12 @@ public class GraphLink<E> {
         Vertex<E> vertexToRemove = searchVertex(v);
         if (vertexToRemove == null) return;
 
-        //para eliminar todas las aristas que apuntan a este vertice desde otros vertices
         Nodo<Vertex<E>> current = listVertex.getFirst();
         while (current != null) {
             current.getData().listAdj.removeNodo(new Edge<>(vertexToRemove));
             current = current.getNext();
         }
 
-        //para eliminar el vertice de la lista de vertices
         listVertex.removeNodo(vertexToRemove);
     }
 
