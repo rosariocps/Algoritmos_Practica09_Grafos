@@ -2,6 +2,7 @@ package graph;
 
 import actividad1.ExceptionIsEmpty;
 import actividad1.StackArray;
+import actividad2.QueueLink;
 import linkedlist.ListaEnlazada;
 import linkedlist.Nodo;
 
@@ -140,4 +141,45 @@ public class GraphLink<E> {
             System.out.println("Error en DFS: " + e.getMessage());
         }
     }
+
+    //MÉTODO BFS (RECORRRIDO EN ANCHURA DESDE EL VERTICE "v")
+    public void bfs(E v) {
+        Vertex<E> verticeInicial = searchVertex(v);
+        if (verticeInicial == null) {
+            System.out.println("El vértice inicial no existe.");
+            return;
+        }
+
+        QueueLink<Vertex<E>> cola = new QueueLink<>();
+        ListaEnlazada<Vertex<E>> visitados = new ListaEnlazada<>();
+
+        cola.enqueue(verticeInicial);
+        visitados.insertLast(verticeInicial);
+
+        System.out.print("Recorrido en anchura: ");
+
+        while (!cola.isEmpty()) {
+            try {
+                Vertex<E> verticeActual = cola.dequeue();
+                System.out.print(verticeActual.getData() + " ");
+
+                Nodo<Edge<E>> nodoArista = verticeActual.listAdj.getFirst();
+                while (nodoArista != null) {
+                    Vertex<E> verticeVecino = nodoArista.getData().getRefDest();
+
+                    if (visitados.search(verticeVecino) == -1) {
+                        cola.enqueue(verticeVecino);
+                        visitados.insertLast(verticeVecino);
+                    }
+
+                    nodoArista = nodoArista.getNext();
+                }
+            } catch (ExceptionIsEmpty e) {
+                System.out.println("Error en la cola: " + e.getMessage());
+            }
+        }
+
+        System.out.println();
+    }
+
 }

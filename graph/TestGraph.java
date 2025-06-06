@@ -41,5 +41,27 @@ public class TestGraph {
         System.out.print("DFS desde A después de eliminar C: ");
         grafo.dfs("A");
         System.out.println();
+
+        GraphLink<String> grafo2 = new GraphLink<>();
+
+        grafo2.insertVertex("1");
+        grafo2.insertVertex("2");
+        grafo2.insertVertex("3");
+        grafo2.insertVertex("6");
+        grafo2.insertVertex("7");
+        grafo2.insertVertex("8");
+
+        grafo2.insertEdge("1", "2");
+        grafo2.insertEdge("1", "3");
+        grafo2.insertEdge("2", "6");
+        grafo2.insertEdge("2", "7");
+        grafo2.insertEdge("3", "7");
+        grafo2.insertEdge("7", "8");
+
+        System.out.println("Estructura del grafo:");
+        System.out.println(grafo2);
+
+        System.out.print("Recorrido BFS desde 1: ");
+        grafo2.bfs("1");
     }
 }
