@@ -3,6 +3,7 @@ package graph;
 import actividad1.ExceptionIsEmpty;
 import actividad1.StackArray;
 import actividad2.QueueLink;
+import ejercicio1.StackLink;
 import linkedlist.ListaEnlazada;
 import linkedlist.Nodo;
 
@@ -181,5 +182,101 @@ public class GraphLink<E> {
 
         System.out.println();
     }
+
+    // Clase auxiliar para guardar pares hijo → padre
+    private class Par {
+        Vertex<E> hijo;
+        Vertex<E> padre;
+
+        public Par(Vertex<E> hijo, Vertex<E> padre) {
+            this.hijo = hijo;
+            this.padre = padre;
+        }
+    }
+
+    private Vertex<E> buscarPadre(Vertex<E> hijo, ListaEnlazada<Par> padres) {
+        Nodo<Par> actual = padres.getFirst();
+        while (actual != null) {
+            if (actual.getData().hijo.equals(hijo)) {
+                return actual.getData().padre;
+            }
+            actual = actual.getNext();
+        }
+        return null;
+    }
+
+    // METODO BFSPATH (CAMINO MÁS CORTO DESDE "v" HASTA "z")
+    public ListaEnlazada<E> bfsPath(E v, E z) {
+        ListaEnlazada<E> camino = new ListaEnlazada<>();
+        Vertex<E> verticeInicial = searchVertex(v);
+        Vertex<E> verticeDestino = searchVertex(z);
+
+        if (verticeInicial == null || verticeDestino == null) {
+            System.out.println("Uno de los vértices no existe.");
+            return camino;
+        }
+
+        QueueLink<Vertex<E>> cola = new QueueLink<>();
+        ListaEnlazada<Vertex<E>> visitados = new ListaEnlazada<>();
+        ListaEnlazada<Par> padres = new ListaEnlazada<>();
+
+        cola.enqueue(verticeInicial);
+        visitados.insertLast(verticeInicial);
+        padres.insertLast(new Par(verticeInicial, null));
+
+        boolean encontrado = false;
+
+        while (!cola.isEmpty()) {
+            try {
+                Vertex<E> verticeActual = cola.dequeue();
+
+                if (verticeActual.equals(verticeDestino)) {
+                    encontrado = true;
+                    break;
+                }
+
+                Nodo<Edge<E>> nodoArista = verticeActual.listAdj.getFirst();
+                while (nodoArista != null) {
+                    Vertex<E> verticeVecino = nodoArista.getData().getRefDest();
+
+                    if (visitados.search(verticeVecino) == -1) {
+                        cola.enqueue(verticeVecino);
+                        visitados.insertLast(verticeVecino);
+                        padres.insertLast(new Par(verticeVecino, verticeActual));
+                    }
+
+                    nodoArista = nodoArista.getNext();
+                }
+
+            } catch (ExceptionIsEmpty e) {
+                System.out.println("Error en la cola: " + e.getMessage());
+            }
+        }
+
+        if (!encontrado) {
+            System.out.println("No existe un camino de " + v + " a " + z);
+            return camino;
+        }
+
+        // Reconstruir el camino hacia atrás usando StackLink
+        StackLink<E> pila = new StackLink<>();
+        Vertex<E> actual = verticeDestino;
+        while (actual != null) {
+            pila.push(actual.getData());
+            actual = buscarPadre(actual, padres);
+        }
+
+        // Pasar los datos de la pila a la lista final (en orden correcto)
+        try {
+            while (!pila.isEmpty()) {
+                camino.insertLast(pila.pop());
+            }
+        } catch (ExceptionIsEmpty e) {
+            System.out.println("Error al reconstruir el camino: " + e.getMessage());
+        }
+
+        return camino;
+    }
+
 
 }

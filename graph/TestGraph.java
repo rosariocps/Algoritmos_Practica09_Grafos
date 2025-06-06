@@ -1,5 +1,8 @@
 package graph;
 
+import linkedlist.ListaEnlazada;
+import linkedlist.Nodo;
+
 public class TestGraph {
     public static void main(String[] args) {
         GraphLink<String> grafo = new GraphLink<>();
@@ -63,5 +66,43 @@ public class TestGraph {
 
         System.out.print("Recorrido BFS desde 1: ");
         grafo2.bfs("1");
+
+
+        GraphLink<String> grafo3 = new GraphLink<>();
+
+        grafo3.insertVertex("1");
+        grafo3.insertVertex("2");
+        grafo3.insertVertex("3");
+        grafo3.insertVertex("4");
+        grafo3.insertVertex("5");
+        grafo3.insertVertex("6");
+
+        grafo3.insertEdge("1", "2");
+        grafo3.insertEdge("1", "5");
+        grafo3.insertEdge("2", "3");
+        grafo3.insertEdge("2", "5");
+        grafo3.insertEdge("3", "4");
+        grafo3.insertEdge("4", "5");
+        grafo3.insertEdge("4", "6");
+
+        // Mostrar la estructura del grafo
+        System.out.println("Estructura del grafo:");
+        System.out.println(grafo3);
+
+        // Buscar y mostrar el camino más corto de 1 a 6 usando bfsPath
+        System.out.println("\nCamino más corto de 1 a 6:");
+
+        ListaEnlazada<String> camino = grafo3.bfsPath("1", "6");
+
+        // Mostrar camino con flechas (→)
+        Nodo<String> actual = camino.getFirst();
+        while (actual != null) {
+            System.out.print(actual.getData());
+            if (actual.getNext() != null) {
+                System.out.print(" --> ");
+            }
+            actual = actual.getNext();
+        }
+        System.out.println(); // Salto de línea final
     }
 }
