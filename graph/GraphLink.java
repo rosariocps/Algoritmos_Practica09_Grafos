@@ -1,7 +1,6 @@
 package graph;
 
 import actividad1.ExceptionIsEmpty;
-import actividad1.StackArray;
 import actividad2.QueueLink;
 import ejercicio1.StackLink;
 import linkedlist.ListaEnlazada;
@@ -137,35 +136,35 @@ public class GraphLink<E> {
     }
 
     public void dfs(E v) {
+        // buscamos el vertice inicial
         Vertex<E> start = searchVertex(v);
         if (start == null) {
-            System.out.println("Vértice no encontrado.");
+            System.out.println("vertice no encontrado.");
             return;
         }
-
+        // lista de vertices visitados
         ListaEnlazada<Vertex<E>> visitados = new ListaEnlazada<>();
-        StackArray<Vertex<E>> pila = new StackArray<>(100);
-
+        // usamos StackLink (pila con lista enlazada)
+        StackLink<Vertex<E>> pila = new StackLink<>();
         try {
-            pila.push(start);
+            pila.push(start); // agregamos el vertice inicial a la pila
             while (!pila.isEmpty()) {
-                Vertex<E> actual = pila.pop();
+                Vertex<E> actual = pila.pop(); // sacamos el ultimo vertice agregado
                 if (visitados.search(actual) == -1) {
-                    System.out.print(actual.getData() + " ");
-                    visitados.insertLast(actual);
-
-                    Nodo<Edge<E>> adyacente = actual.listAdj.getFirst();
+                    System.out.print(actual.getData() + " "); // mostramos el dato del vertice
+                    visitados.insertLast(actual); // lo marcamos como visitado
+                    Nodo<Edge<E>> adyacente = actual.listAdj.getFirst(); // recorremos sus aristas
                     while (adyacente != null) {
                         Vertex<E> destino = adyacente.getData().getRefDest();
                         if (visitados.search(destino) == -1) {
-                            pila.push(destino);
+                            pila.push(destino); // si no fue visitado, lo agregamos a la pila
                         }
-                        adyacente = adyacente.getNext();
+                        adyacente = adyacente.getNext(); // siguiente arista
                     }
                 }
             }
         } catch (ExceptionIsEmpty e) {
-            System.out.println("Error en DFS: " + e.getMessage());
+            System.out.println("error en dfs: " + e.getMessage());
         }
     }
 
