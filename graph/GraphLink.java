@@ -14,100 +14,126 @@ public class GraphLink<E> {
         listVertex = new ListaEnlazada<>();
     }
 
-    // INSERTAR VÉRTICE – siguiendo el pseudocódigo exacto
+    // INSERTAR VERTICE 
     public void insertVertex(E dato) {
-        // Paso 1: buscar el dato en la listaVertex del grafo
+        //1ro buscamos el dato en la listaVertex del grafo
         if (searchVertex(dato) != null) {
+            //si esta lanzamos excepcion
             throw new RuntimeException("El vértice ya existe");
         }
-
-        // Si no existe
-        Vertex<E> nuevoVertex = new Vertex<>(dato); // crear nuevoVertex(dato)
-        listVertex.insertLast(nuevoVertex);         // ListaVertex.add(nuevoVertex)
+        //si no existe
+        Vertex<E> nuevoVertex = new Vertex<>(dato); // creamos un nuevoVertex(dato)
+        listVertex.insertLast(nuevoVertex);         // y lo añadimos a ListaVertex
     }
 
-    // INSERTAR ARISTA (grafo NO dirigido) – según pseudocódigo
+    // INSERTAR ARISTA (grafo NO dirigido)
     public void insertEdge(E vertexO, E vertexD, int weight) {
-        // 1. Validar que existan vertexO y vertexD en la lista de vértices
+        //1ro validamos que existan vertexO y vertexD en la lista de vertices
         Vertex<E> origen = searchVertex(vertexO);
         Vertex<E> destino = searchVertex(vertexD);
-
+        //si alguno de los vertices no fue encontrado, se lanza un error
         if (origen == null || destino == null) {
-            throw new RuntimeException("Uno o ambos vértices no existen");
+            throw new RuntimeException("Uno o ambos vertices no existen");
         }
-
-        // 2. Crear nueva arista de O → D
+        //2do Creamos nueva arista de O → D
         Edge<E> nuevoEdge1 = new Edge<>(destino, weight);
-
-        // 3. Crear nueva arista de D → O
+        //3ro Creamos nueva arista de D → O
         Edge<E> nuevoEdge2 = new Edge<>(origen, weight);
-
-        // 4. Insertar ambas aristas en las listas correspondientes
+        //4to Insertamos ambas aristas en las listas correspondientes
         origen.listAdj.insertLast(nuevoEdge1);
         destino.listAdj.insertLast(nuevoEdge2);
     }
-
-    // Mantengo también la versión sin peso como adicional
+    //metodo sobrecargado - varios metodos con el mismo nombre pero con diferentes parametros
+    //version sin peso como adicional
     public void insertEdge(E verOri, E verDes) {
         insertEdge(verOri, verDes, -1);
     }
-
+    //BUSCAR UN VERTICE
     public Vertex<E> searchVertex(E data) {
+        //creamos un nodo current que va apuntar al 1er nodo de la lista de vertices
         Nodo<Vertex<E>> current = listVertex.getFirst();
+        //mientras no lleguemos al final de la lista
         while (current != null) {
+            //Comparamos el valor dentro del vértice actual con el dato que estamos buscando
+            //current.getData():Nos da el vertice actual (un objeto Vertex<E>)
+            //.getData():esto accede al dato dentro de ese vertice, que es de tipo E
+            //.equals(data):esto compara ese dato con el dato que estas buscando, usando .equals
             if (current.getData().getData().equals(data)) {
-                return current.getData();
+                return current.getData();  //si se encontro retornamos el vertice (objeto Vertex)
             }
-            current = current.getNext();
+            current = current.getNext(); //si no se encontro se pasa al siguiente nodo de la lista
         }
-        return null;
+        return null; //si ya se recorrio la lista y no se encontro, retonamos null
     }
 
     public boolean searchEdge(E v, E z) {
-        Vertex<E> vertV = searchVertex(v);
+        // buscamos el vertice que contiene el dato v
+        Vertex<E> vertV = searchVertex(v);   
+        // buscamos el vertice que contiene el dato z
         Vertex<E> vertZ = searchVertex(z);
+        // si alguno de los dos vertices no existe, no puede haber arista
         if (vertV == null || vertZ == null) return false;
-
+        // obtenemos el primer nodo de la lista de adyacencia del vertice v
         Nodo<Edge<E>> current = vertV.listAdj.getFirst();
+        // recorremos la lista de aristas del vertice v
         while (current != null) {
+            // si el destino de la arista actual es igual al vertice z
             if (current.getData().getRefDest().equals(vertZ)) {
+                // entonces existe una arista entre v y z
                 return true;
             }
+            // pasamos al siguiente nodo en la lista
             current = current.getNext();
         }
+        // si no encontramos la arista, retornamos false
         return false;
     }
 
     public String toString() {
+        // obtenemos el primer nodo de la lista de vertices
         Nodo<Vertex<E>> current = listVertex.getFirst();
+        // inicializamos una cadena vacia para guardar el resultado
         String result = "";
+        // recorremos la lista de vertices
         while (current != null) {
+            // agregamos la representacion del vertice actual al resultado
             result += current.getData().toString();
+            // pasamos al siguiente nodo de la lista
             current = current.getNext();
         }
+        // retornamos el texto con todos los vertices y sus conexiones
         return result;
     }
 
     public void removeVertex(E v) {
+        // buscamos el vertice que contiene el dato v
         Vertex<E> vertexToRemove = searchVertex(v);
+        // si no existe el vertice, salimos del metodo
         if (vertexToRemove == null) return;
-
+        // obtenemos el primer nodo de la lista de vertices
         Nodo<Vertex<E>> current = listVertex.getFirst();
+        // recorremos todos los vertices del grafo
         while (current != null) {
+            // eliminamos cualquier arista que apunte al vertice a eliminar
             current.getData().listAdj.removeNodo(new Edge<>(vertexToRemove));
+            // pasamos al siguiente vertice
             current = current.getNext();
         }
-
+        // finalmente, eliminamos el vertice de la lista de vertices
         listVertex.removeNodo(vertexToRemove);
     }
 
     public void removeEdge(E v, E z) {
+        // buscamos el vertice que contiene el dato v
         Vertex<E> vertV = searchVertex(v);
+        // buscamos el vertice que contiene el dato z
         Vertex<E> vertZ = searchVertex(z);
+        // si alguno de los dos vertices no existe, no hay nada que eliminar
         if (vertV == null || vertZ == null) return;
-
+        // eliminamos la arista que va de v a z
         vertV.listAdj.removeNodo(new Edge<>(vertZ));
-        vertZ.listAdj.removeNodo(new Edge<>(vertV)); // grafo no dirigido
+        // eliminamos la arista que va de z a v (porque el grafo es no dirigido)
+        vertZ.listAdj.removeNodo(new Edge<>(vertV));
     }
 
     public void dfs(E v) {
