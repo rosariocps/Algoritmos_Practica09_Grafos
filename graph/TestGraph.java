@@ -5,34 +5,36 @@ import linkedlist.Nodo;
 
 public class TestGraph {
     public static void main(String[] args) {
+        // === PRUEBAS GENERALES DEL GRAFO ===
         GraphLink<String> grafo = new GraphLink<>();
 
-        //insertar vértices
+        // insertar vertices
         grafo.insertVertex("A");
         grafo.insertVertex("B");
         grafo.insertVertex("C");
         grafo.insertVertex("D");
 
-        //insertar aristas
+        // insertar aristas
         grafo.insertEdge("A", "B");
         grafo.insertEdge("A", "C");
         grafo.insertEdge("B", "D");
         grafo.insertEdge("C", "D");
 
-        //mostrar el grafo
+        // mostrar grafo
         System.out.println("Grafo actual:");
         System.out.println(grafo);
 
-        //buscar aristas
+        // buscar aristas
         System.out.println("¿Existe arista A-B? " + grafo.searchEdge("A", "B"));
         System.out.println("¿Existe arista B-C? " + grafo.searchEdge("B", "C"));
         System.out.println("¿Existe arista C-D? " + grafo.searchEdge("C", "D"));
 
-        //prueba DFS
+        // prueba DFS
         System.out.print("DFS desde A: ");
         grafo.dfs("A");
         System.out.println();
 
+        // eliminar aristas y vertices
         System.out.println("\nEliminando arista A-B...");
         grafo.removeEdge("A", "B");
         System.out.println(grafo);
@@ -45,8 +47,8 @@ public class TestGraph {
         grafo.dfs("A");
         System.out.println();
 
+        // === PRUEBA DE BFS ===
         GraphLink<String> grafo2 = new GraphLink<>();
-
         grafo2.insertVertex("1");
         grafo2.insertVertex("2");
         grafo2.insertVertex("3");
@@ -67,9 +69,8 @@ public class TestGraph {
         System.out.print("Recorrido BFS desde 1: ");
         grafo2.bfs("1");
 
-
+        // === PRUEBA DE BFS CON CAMINO MÁS CORTO ===
         GraphLink<String> grafo3 = new GraphLink<>();
-
         grafo3.insertVertex("1");
         grafo3.insertVertex("2");
         grafo3.insertVertex("3");
@@ -85,16 +86,13 @@ public class TestGraph {
         grafo3.insertEdge("4", "5");
         grafo3.insertEdge("4", "6");
 
-        // Mostrar la estructura del grafo
         System.out.println("Estructura del grafo:");
         System.out.println(grafo3);
 
-        // Buscar y mostrar el camino más corto de 1 a 6 usando bfsPath
+        // buscar camino mas corto de 1 a 6
         System.out.println("\nCamino más corto de 1 a 6:");
-
         ListaEnlazada<String> camino = grafo3.bfsPath("1", "6");
 
-        // Mostrar camino con flechas (→)
         Nodo<String> actual = camino.getFirst();
         while (actual != null) {
             System.out.print(actual.getData());
@@ -103,6 +101,47 @@ public class TestGraph {
             }
             actual = actual.getNext();
         }
-        System.out.println(); // Salto de línea final
+        System.out.println();
+
+        // === EJERCICIO 5: TIPO DE GRAFO ===
+        System.out.println("\n=== EJERCICIO 5: TIPO DE GRAFO ===");
+        GraphLink<String> grafoTipo = new GraphLink<>();
+        grafoTipo.insertVertex("A");
+        grafoTipo.insertVertex("B");
+        grafoTipo.insertVertex("C");
+        grafoTipo.insertVertex("D");
+        grafoTipo.insertEdge("A", "B");
+        grafoTipo.insertEdge("B", "C");
+        grafoTipo.insertEdge("C", "D");
+        grafoTipo.insertEdge("D", "A"); // esto forma un ciclo (C4)
+
+        System.out.println("Grado de A: " + TipoGrafoUtils.gradoNodo(grafoTipo, "A"));
+        System.out.println("¿Es Camino? " + TipoGrafoUtils.esCamino(grafoTipo));
+        System.out.println("¿Es Ciclo? " + TipoGrafoUtils.esCiclo(grafoTipo));
+        System.out.println("¿Es Rueda? " + TipoGrafoUtils.esRueda(grafoTipo));
+        System.out.println("¿Es Completo? " + TipoGrafoUtils.esCompleto(grafoTipo));
+
+        // === EJERCICIO 6: FORMAS DE REPRESENTACION ===
+        System.out.println("\n=== EJERCICIO 6: FORMAS DE REPRESENTACION ===");
+
+        GraphLink<String> grafoRep = new GraphLink<>();
+        grafoRep.insertVertex("X");
+        grafoRep.insertVertex("Y");
+        grafoRep.insertVertex("Z");
+
+        grafoRep.insertEdge("X", "Y");
+        grafoRep.insertEdge("Y", "Z");
+
+        // a) forma formal
+        System.out.println("\n- Forma formal:");
+        RepresentacionesGrafo.formaFormal(grafoRep);
+
+        // b) lista de adyacencias
+        System.out.println("\n- Lista de adyacencia:");
+        RepresentacionesGrafo.listaAdyacencia(grafoRep);
+
+        // c) matriz de adyacencia
+        System.out.println("\n- Matriz de adyacencia:");
+        RepresentacionesGrafo.matrizAdyacencia(grafoRep);
     }
 }
