@@ -100,57 +100,72 @@ public class TipoGrafoUtils {
 
     // metodo para mostrar la lista de adyacencia
     public static <E> void mostrarListaAdyacencia(GraphLink<E> grafo) {
-        System.out.println("lista de adyacencia:");
-        Nodo<Vertex<E>> current = grafo.listVertex.getFirst(); // recorremos los vertices
-        while (current != null) {
-            System.out.print(current.getData().getData() + " -> ");
-            Nodo<Edge<E>> arista = current.getData().listAdj.getFirst(); // recorremos adyacentes
-            while (arista != null) {
-                System.out.print(arista.getData().getRefDest().getData() + " ");
-                arista = arista.getNext();
+        System.out.println("lista de adyacencia:"); // imprimimos un titulo
+
+        Nodo<Vertex<E>> current = grafo.listVertex.getFirst(); // obtenemos el primer vertice del grafo
+
+        while (current != null) { // recorremos todos los vertices uno por uno
+            System.out.print(current.getData().getData() + " -> "); // imprimimos el nombre del vertice actual seguido de una flecha
+
+            Nodo<Edge<E>> arista = current.getData().listAdj.getFirst(); // obtenemos la primera arista (conexion) de este vertice
+
+            while (arista != null) { // recorremos todas las aristas de este vertice
+                System.out.print(arista.getData().getRefDest().getData() + " "); // imprimimos el nombre del vertice al que esta conectado
+                arista = arista.getNext(); // pasamos a la siguiente arista
             }
-            System.out.println();
-            current = current.getNext();
+
+            System.out.println(); // salto de linea despues de mostrar todas las conexiones del vertice actual
+            current = current.getNext(); // pasamos al siguiente vertice en la lista
         }
     }
+
 
     // metodo para mostrar la matriz de adyacencia
     public static <E> void mostrarMatrizAdyacencia(GraphLink<E> grafo) {
         int n = grafo.listVertex.length(); // cantidad de vertices
         Vertex<E>[] vertices = new Vertex[n]; // arreglo para guardar los vertices
 
-        // copiamos los vertices en un arreglo para facilitar el acceso
-        Nodo<Vertex<E>> current = grafo.listVertex.getFirst();
-        int i = 0;
-        while (current != null) {
-            vertices[i++] = current.getData();
-            current = current.getNext();
+        // copiamos los vertices en un arreglo para facilitar el acceso por posicion
+        Nodo<Vertex<E>> current = grafo.listVertex.getFirst(); // obtenemos el primer nodo de la lista de vertices
+        int i = 0; // iniciamos el indice en 0
+        while (current != null) { // mientras haya nodos en la lista
+            vertices[i++] = current.getData(); // guardamos el vertice en el arreglo y avanzamos el indice
+            current = current.getNext(); // pasamos al siguiente nodo de la lista
         }
 
-        System.out.println("matriz de adyacencia:");
-        System.out.print("    ");
-        for (i = 0; i < n; i++) {
-            System.out.print(vertices[i].getData() + " ");
-        }
-        System.out.println();
+        System.out.println("matriz de adyacencia:"); // imprimimos el titulo
+        System.out.print("    "); // espacio en blanco para alinear con la primera columna
 
-        // recorremos filas
+        // imprimimos los nombres de los vertices en la primera fila (encabezado de columnas)
         for (i = 0; i < n; i++) {
-            System.out.print(vertices[i].getData() + " ");
-            // recorremos columnas
+            System.out.print(vertices[i].getData() + " "); // imprimimos el nombre del vertice
+        }
+        System.out.println(); // salto de linea
+
+        // recorremos cada fila de la matriz
+        for (i = 0; i < n; i++) {
+            System.out.print(vertices[i].getData() + " "); // imprimimos el nombre del vertice en el lado izquierdo (fila)
+
+            // recorremos cada columna de la fila
             for (int j = 0; j < n; j++) {
-                boolean conectado = false;
+                boolean conectado = false; // asumimos que no hay conexion entre i y j
+
+                // recorremos la lista de aristas del vertice en la fila actual
                 Nodo<Edge<E>> arista = vertices[i].listAdj.getFirst();
-                while (arista != null) {
+                while (arista != null) { // mientras haya aristas
+                    // si encontramos una arista que conecta con el vertice de la columna
                     if (arista.getData().getRefDest().equals(vertices[j])) {
-                        conectado = true;
-                        break;
+                        conectado = true; // marcamos que si estan conectados
+                        break; // salimos del bucle porque ya encontramos la conexion
                     }
-                    arista = arista.getNext();
+                    arista = arista.getNext(); // pasamos a la siguiente arista
                 }
+
+                // imprimimos 1 si estan conectados, 0 si no lo estan
                 System.out.print("  " + (conectado ? "1" : "0") + " ");
             }
-            System.out.println();
+            System.out.println(); // salto de linea para la siguiente fila
         }
+
     }
 }
