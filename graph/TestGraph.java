@@ -134,14 +134,15 @@ public class TestGraph {
 
         // a) forma formal
         System.out.println("\n- Forma formal:");
-        RepresentacionesGrafo.formaFormal(grafoRep);
+        TipoGrafoUtils.mostrarFormal(grafoRep);
 
         // b) lista de adyacencias
         System.out.println("\n- Lista de adyacencia:");
-        RepresentacionesGrafo.listaAdyacencia(grafoRep);
+        TipoGrafoUtils.mostrarListaAdyacencia(grafoRep);
 
         // c) matriz de adyacencia
         System.out.println("\n- Matriz de adyacencia:");
-        RepresentacionesGrafo.matrizAdyacencia(grafoRep);
+        TipoGrafoUtils.mostrarMatrizAdyacencia(grafoRep);
+
     }
 }
