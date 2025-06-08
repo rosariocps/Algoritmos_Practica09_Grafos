@@ -69,4 +69,88 @@ public class TipoGrafoUtils {
         }
         return true; // si todos tienen conexiones completas, es completo
     }
+
+    // metodo para mostrar definicion formal del grafo
+    public static <E> void mostrarFormal(GraphLink<E> grafo) {
+        System.out.println("definicion formal:");
+        System.out.print("v = { ");
+        Nodo<Vertex<E>> current = grafo.listVertex.getFirst(); // recorremos vertices
+        while (current != null) {
+            System.out.print(current.getData().getData() + " ");
+            current = current.getNext();
+        }
+        System.out.println("}");
+        System.out.print("e = { ");
+        Nodo<Vertex<E>> vActual = grafo.listVertex.getFirst(); // recorremos de nuevo
+        while (vActual != null) {
+            Nodo<Edge<E>> arista = vActual.getData().listAdj.getFirst(); // obtenemos aristas
+            while (arista != null) {
+                E origen = vActual.getData().getData();
+                E destino = arista.getData().getRefDest().getData();
+                // evitamos repetir aristas (como es grafo no dirigido)
+                if (origen.toString().compareTo(destino.toString()) < 0) {
+                    System.out.print("(" + origen + "," + destino + ") ");
+                }
+                arista = arista.getNext(); // siguiente arista
+            }
+            vActual = vActual.getNext(); // siguiente vertice
+        }
+        System.out.println("}");
+    }
+
+    // metodo para mostrar la lista de adyacencia
+    public static <E> void mostrarListaAdyacencia(GraphLink<E> grafo) {
+        System.out.println("lista de adyacencia:");
+        Nodo<Vertex<E>> current = grafo.listVertex.getFirst(); // recorremos los vertices
+        while (current != null) {
+            System.out.print(current.getData().getData() + " -> ");
+            Nodo<Edge<E>> arista = current.getData().listAdj.getFirst(); // recorremos adyacentes
+            while (arista != null) {
+                System.out.print(arista.getData().getRefDest().getData() + " ");
+                arista = arista.getNext();
+            }
+            System.out.println();
+            current = current.getNext();
+        }
+    }
+
+    // metodo para mostrar la matriz de adyacencia
+    public static <E> void mostrarMatrizAdyacencia(GraphLink<E> grafo) {
+        int n = grafo.listVertex.length(); // cantidad de vertices
+        Vertex<E>[] vertices = new Vertex[n]; // arreglo para guardar los vertices
+
+        // copiamos los vertices en un arreglo para facilitar el acceso
+        Nodo<Vertex<E>> current = grafo.listVertex.getFirst();
+        int i = 0;
+        while (current != null) {
+            vertices[i++] = current.getData();
+            current = current.getNext();
+        }
+
+        System.out.println("matriz de adyacencia:");
+        System.out.print("    ");
+        for (i = 0; i < n; i++) {
+            System.out.print(vertices[i].getData() + " ");
+        }
+        System.out.println();
+
+        // recorremos filas
+        for (i = 0; i < n; i++) {
+            System.out.print(vertices[i].getData() + " ");
+            // recorremos columnas
+            for (int j = 0; j < n; j++) {
+                boolean conectado = false;
+                Nodo<Edge<E>> arista = vertices[i].listAdj.getFirst();
+                while (arista != null) {
+                    if (arista.getData().getRefDest().equals(vertices[j])) {
+                        conectado = true;
+                        break;
+                    }
+                    arista = arista.getNext();
+                }
+                System.out.print("  " + (conectado ? "1" : "0") + " ");
+            }
+            System.out.println();
+        }
+    }
 }
