@@ -450,4 +450,108 @@ public class GraphLink<E> {
         padres.insertLast(new Par(hijo, nuevoPadre));
     }
 
+    // MÉTODO ISCONEXO (devuelve true si todos los vértices están conectados entre sí)
+    public boolean isConexo() {
+        ListaEnlazada<Vertex<E>> visitados = new ListaEnlazada<>();
+        Nodo<Vertex<E>> nodoInicio = listVertex.getFirst();
+
+        if (nodoInicio == null) return true;
+
+        StackLink<Vertex<E>> pila = new StackLink<>();
+        pila.push(nodoInicio.getData());
+
+        try {
+            while (!pila.isEmpty()) {
+                Vertex<E> actual = pila.pop();
+                if (visitados.search(actual) == -1) {
+                    visitados.insertLast(actual);
+                    Nodo<Edge<E>> arista = actual.listAdj.getFirst();
+                    while (arista != null) {
+                        Vertex<E> vecino = arista.getData().getRefDest();
+                        if (visitados.search(vecino) == -1) {
+                            pila.push(vecino);
+                        }
+                        arista = arista.getNext();
+                    }
+                }
+            }
+        } catch (ExceptionIsEmpty e) {
+            return false;
+        }
+
+        return visitados.length() == listVertex.length();
+    }
+
+    // MÉTODO DIJKSTRA (retorna un stack con la ruta más corta desde el vértice v hasta w)
+    public StackLink<E> Dijkstra(E v, E w) {
+        StackLink<E> camino = new StackLink<>();
+        Vertex<E> origen = searchVertex(v);
+        Vertex<E> destino = searchVertex(w);
+
+        if (origen == null || destino == null) {
+            System.out.println("Uno de los vértices no existe.");
+            return camino;
+        }
+
+        ListaEnlazada<Vertex<E>> visitados = new ListaEnlazada<>();
+        ListaEnlazada<Par> padres = new ListaEnlazada<>();
+        ListaEnlazada<ParValor> distancias = new ListaEnlazada<>();
+        PriorityQueueLinkSort<Vertex<E>, Integer> cola = new PriorityQueueLinkSort<>();
+
+        Nodo<Vertex<E>> actualV = listVertex.getFirst();
+        while (actualV != null) {
+            Vertex<E> vert = actualV.getData();
+            int distanciaInicial = vert.equals(origen) ? 0 : Integer.MAX_VALUE;
+            distancias.insertLast(new ParValor(vert, distanciaInicial));
+            actualV = actualV.getNext();
+        }
+
+        cola.enqueue(origen, 0);
+        padres.insertLast(new Par(origen, null));
+
+        while (!cola.isEmpty()) {
+            Vertex<E> actual;
+            try {
+                actual = cola.dequeue();
+            } catch (ExceptionIsEmpty e) {
+                break;
+            }
+
+            if (visitados.search(actual) != -1) continue;
+            visitados.insertLast(actual);
+
+            Nodo<Edge<E>> arista = actual.listAdj.getFirst();
+            while (arista != null) {
+                Vertex<E> vecino = arista.getData().getRefDest();
+                int peso = arista.getData().getWeight();
+
+                if (visitados.search(vecino) == -1) {
+                    int distanciaActual = getDistancia(distancias, actual);
+                    int nuevaDistancia = distanciaActual + peso;
+
+                    if (nuevaDistancia < getDistancia(distancias, vecino)) {
+                        actualizarDistancia(distancias, vecino, nuevaDistancia);
+                        cola.enqueue(vecino, nuevaDistancia);
+                        reemplazarPadre(padres, vecino, actual);
+                    }
+                }
+
+                arista = arista.getNext();
+            }
+        }
+
+        if (buscarPadre(destino, padres) == null && !origen.equals(destino)) {
+            System.out.println("No existe un camino de " + v + " a " + w);
+            return camino;
+        }
+
+        Vertex<E> actual = destino;
+        while (actual != null) {
+            camino.push(actual.getData());
+            actual = buscarPadre(actual, padres);
+        }
+
+        return camino;
+    }
+
 }
