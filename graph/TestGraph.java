@@ -69,7 +69,7 @@ public class TestGraph {
         System.out.print("Recorrido BFS desde 1: ");
         grafo2.bfs("1");
 
-        // === PRUEBA DE BFS CON CAMINO MÁS CORTO ===
+        // PRUEBA DE BFS CON CAMINO MÁS CORTO
         GraphLink<String> grafo3 = new GraphLink<>();
         grafo3.insertVertex("1");
         grafo3.insertVertex("2");
@@ -102,6 +102,40 @@ public class TestGraph {
             actual = actual.getNext();
         }
         System.out.println();
+
+        // PRUEBA DE MÉTODO SHORTPATH
+        System.out.println("\nPRUEBA DE MÉTODO SHORTPATH");
+        GraphLink<String> grafo4 = new GraphLink<>();
+        grafo4.insertVertex("A");
+        grafo4.insertVertex("B");
+        grafo4.insertVertex("C");
+        grafo4.insertVertex("D");
+        grafo4.insertVertex("E");
+
+        grafo4.insertEdgeWeight("A", "B", 4);
+        grafo4.insertEdgeWeight("A", "C", 2);
+        grafo4.insertEdgeWeight("B", "C", 1);
+        grafo4.insertEdgeWeight("B", "D", 5);
+        grafo4.insertEdgeWeight("C", "D", 8);
+        grafo4.insertEdgeWeight("C", "E", 10);
+        grafo4.insertEdgeWeight("D", "E", 2);
+
+        System.out.println("\nEstructura del grafo ponderado:");
+        System.out.println(grafo4);
+
+        System.out.println("Camino más corto de A a E:");
+        ListaEnlazada<String> camino2 = grafo4.shortPath("A", "E");
+
+        Nodo<String> nodoCamino = camino2.getFirst();
+        while (nodoCamino != null) {
+            System.out.print(nodoCamino.getData());
+            if (nodoCamino.getNext() != null) {
+                System.out.print(" --> ");
+            }
+            nodoCamino = nodoCamino.getNext();
+        }
+        System.out.println();
+
 
         // === EJERCICIO 5: TIPO DE GRAFO ===
         System.out.println("\n=== EJERCICIO 5: TIPO DE GRAFO ===");

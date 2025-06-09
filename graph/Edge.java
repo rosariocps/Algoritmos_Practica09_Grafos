@@ -17,6 +17,10 @@ public class Edge<E> {
     public Vertex<E> getRefDest() {
         return refDest;
     }
+
+    public int getWeight(){
+        return weight;
+    }
     //para comparar si dos aristas son iguales 
     public boolean equals(Object o) { //parametro de tipo Object para poder comparar cualquier objeto)
         //si el objeto o es una instancia de Edge

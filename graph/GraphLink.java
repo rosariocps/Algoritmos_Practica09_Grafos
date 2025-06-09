@@ -2,6 +2,7 @@ package graph;
 
 import actividad1.ExceptionIsEmpty;
 import actividad2.QueueLink;
+import actividad3.PriorityQueueLinkSort;
 import ejercicio1.StackLink;
 import linkedlist.ListaEnlazada;
 import linkedlist.Nodo;
@@ -324,6 +325,129 @@ public class GraphLink<E> {
         destino.listAdj.insertLast(nuevoEdgeOrigen);
     }
 
+    // MÉTODO SHORTPATH (encuentra el camino más corto en peso desde v hasta z usando Dijkstra)
+    public ListaEnlazada<E> shortPath(E v, E z) {
+        ListaEnlazada<E> camino = new ListaEnlazada<>();
+        Vertex<E> origen = searchVertex(v);
+        Vertex<E> destino = searchVertex(z);
 
+        if (origen == null || destino == null) {
+            System.out.println("Uno de los vértices no existe.");
+            return camino;
+        }
+
+        ListaEnlazada<Vertex<E>> visitados = new ListaEnlazada<>();
+        ListaEnlazada<Par> padres = new ListaEnlazada<>();
+        ListaEnlazada<ParValor> distancias = new ListaEnlazada<>();
+        PriorityQueueLinkSort<Vertex<E>, Integer> cola = new PriorityQueueLinkSort<>();
+
+        Nodo<Vertex<E>> actualV = listVertex.getFirst();
+        while (actualV != null) {
+            Vertex<E> vert = actualV.getData();
+            int distanciaInicial = vert.equals(origen) ? 0 : Integer.MAX_VALUE;
+            distancias.insertLast(new ParValor(vert, distanciaInicial));
+            actualV = actualV.getNext();
+        }
+
+        cola.enqueue(origen, 0);
+        padres.insertLast(new Par(origen, null));
+
+        while (!cola.isEmpty()) {
+            Vertex<E> actual;
+            try {
+                actual = cola.dequeue();
+            } catch (ExceptionIsEmpty e) {
+                break;
+            }
+
+            if (visitados.search(actual) != -1) continue;
+            visitados.insertLast(actual);
+
+            Nodo<Edge<E>> arista = actual.listAdj.getFirst();
+            while (arista != null) {
+                Vertex<E> vecino = arista.getData().getRefDest();
+                int peso = arista.getData().getWeight();
+
+                if (visitados.search(vecino) == -1) {
+                    int distanciaActual = getDistancia(distancias, actual);
+                    int nuevaDistancia = distanciaActual + peso;
+
+                    if (nuevaDistancia < getDistancia(distancias, vecino)) {
+                        actualizarDistancia(distancias, vecino, nuevaDistancia);
+                        cola.enqueue(vecino, nuevaDistancia);
+                        reemplazarPadre(padres, vecino, actual);
+                    }
+                }
+
+                arista = arista.getNext();
+            }
+        }
+
+        if (buscarPadre(destino, padres) == null && !origen.equals(destino)) {
+            System.out.println("No existe un camino de " + v + " a " + z);
+            return camino;
+        }
+
+        StackLink<E> pila = new StackLink<>();
+        Vertex<E> actual = destino;
+        while (actual != null) {
+            pila.push(actual.getData());
+            actual = buscarPadre(actual, padres);
+        }
+
+        try {
+            while (!pila.isEmpty()) {
+                camino.insertLast(pila.pop());
+            }
+        } catch (ExceptionIsEmpty e) {
+            System.out.println("Error al reconstruir el camino.");
+        }
+
+        return camino;
+    }
+
+    private class ParValor {
+        Vertex<E> vertice;
+        int distancia;
+
+        public ParValor(Vertex<E> vertice, int distancia) {
+            this.vertice = vertice;
+            this.distancia = distancia;
+        }
+    }
+
+    private int getDistancia(ListaEnlazada<ParValor> distancias, Vertex<E> v) {
+        Nodo<ParValor> actual = distancias.getFirst();
+        while (actual != null) {
+            if (actual.getData().vertice.equals(v)) {
+                return actual.getData().distancia;
+            }
+            actual = actual.getNext();
+        }
+        return Integer.MAX_VALUE;
+    }
+
+    private void actualizarDistancia(ListaEnlazada<ParValor> distancias, Vertex<E> v, int nuevaDistancia) {
+        Nodo<ParValor> actual = distancias.getFirst();
+        while (actual != null) {
+            if (actual.getData().vertice.equals(v)) {
+                actual.getData().distancia = nuevaDistancia;
+                return;
+            }
+            actual = actual.getNext();
+        }
+    }
+
+    private void reemplazarPadre(ListaEnlazada<Par> padres, Vertex<E> hijo, Vertex<E> nuevoPadre) {
+        Nodo<Par> actual = padres.getFirst();
+        while (actual != null) {
+            if (actual.getData().hijo.equals(hijo)) {
+                actual.getData().padre = nuevoPadre;
+                return;
+            }
+            actual = actual.getNext();
+        }
+        padres.insertLast(new Par(hijo, nuevoPadre));
+    }
 
 }
