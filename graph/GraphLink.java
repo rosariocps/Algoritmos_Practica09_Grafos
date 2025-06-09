@@ -54,8 +54,8 @@ public class GraphLink<E> {
         //mientras no lleguemos al final de la lista
         while (current != null) {
             //Comparamos el valor dentro del vértice actual con el dato que estamos buscando
-            //current.getData():Nos da el vertice actual (un objeto Vertex<E>)
-            //.getData():esto accede al dato dentro de ese vertice, que es de tipo E
+            //current.getData() de Nodo:Nos da el vertice actual (un objeto Vertex<E>)
+            //.getData() de Vertex:esto accede al dato dentro de ese vertice, que es de tipo E
             //.equals(data):esto compara ese dato con el dato que estas buscando, usando .equals
             if (current.getData().getData().equals(data)) {
                 return current.getData();  //si se encontro retornamos el vertice (objeto Vertex)
