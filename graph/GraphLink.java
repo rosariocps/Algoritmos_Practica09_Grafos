@@ -64,7 +64,7 @@ public class GraphLink<E> {
         }
         return null; //si ya se recorrio la lista y no se encontro, retonamos null
     }
-
+    //BUSCAR UNA ARISTA
     public boolean searchEdge(E v, E z) {
         // buscamos el vertice que contiene el dato v
         Vertex<E> vertV = searchVertex(v);   
@@ -103,7 +103,7 @@ public class GraphLink<E> {
         // retornamos el texto con todos los vertices y sus conexiones
         return result;
     }
-
+    //ELIMINAR VERTICE
     public void removeVertex(E v) {
         // buscamos el vertice que contiene el dato v
         Vertex<E> vertexToRemove = searchVertex(v);
@@ -121,7 +121,7 @@ public class GraphLink<E> {
         // finalmente, eliminamos el vertice de la lista de vertices
         listVertex.removeNodo(vertexToRemove);
     }
-
+    //ELIMINAR ARISTA - GRAFO NO DIRIGIDO
     public void removeEdge(E v, E z) {
         // buscamos el vertice que contiene el dato v
         Vertex<E> vertV = searchVertex(v);
@@ -134,7 +134,7 @@ public class GraphLink<E> {
         // eliminamos la arista que va de z a v (porque el grafo es no dirigido)
         vertZ.listAdj.removeNodo(new Edge<>(vertV));
     }
-
+    //RECORRIDO DE PROFUNDIDAD
     public void dfs(E v) {
         // buscamos el vertice inicial
         Vertex<E> start = searchVertex(v);
