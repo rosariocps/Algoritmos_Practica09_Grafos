@@ -206,6 +206,61 @@ public class TestGraph {
         System.out.println("¿Es Ciclo Dirigido? " + TipoGrafoUtils.esCicloDirigido(grafoDir));
         System.out.println("¿Es Rueda Dirigida? " + TipoGrafoUtils.esRuedaDirigida(grafoDir));
 
+        // ==== EJERCICIO 9: ANÁLISIS DE GRAFO DIRIGIDO ====
+        System.out.println("\n=== EJERCICIO 8: REPRESENTACIÓN DE GRAFO DIRIGIDO ===");
+
+        GraphLink<String> grafoDirRep = new GraphLink<>();
+        grafoDirRep.insertVertex("X");
+        grafoDirRep.insertVertex("Y");
+        grafoDirRep.insertVertex("Z");
+
+        grafoDirRep.insertEdge("X", "Y");
+        grafoDirRep.insertEdge("Y", "Z");
+
+        System.out.println("\n- Forma formal:");
+        RepresentacionGrafoDirigido.mostrarFormal(grafoDirRep);
+
+        System.out.println("\n- Lista de adyacencia:");
+        RepresentacionGrafoDirigido.mostrarListaAdyacencia(grafoDirRep);
+
+        System.out.println("\n- Matriz de adyacencia:");
+        RepresentacionGrafoDirigido.mostrarMatrizAdyacencia(grafoDirRep);
+
+        // ==== EJERCICIO 9: Análisis de Grafos Dirigidos ====
+        System.out.println("\n==== EJERCICIO 9: Análisis de Grafos Dirigidos ====");
+        // GRAFO 1
+        GraphLink<String> grafoA = new GraphLink<>();
+        grafoA.insertVertex("A");
+        grafoA.insertVertex("B");
+        grafoA.insertVertex("C");
+        grafoA.insertVertex("D");
+
+        grafoA.insertEdge("A", "B");
+        grafoA.insertEdge("B", "C");
+        grafoA.insertEdge("C", "D");
+        grafoA.insertEdge("D", "A"); // cierra el ciclo
+        grafoA.insertEdge("A", "C"); // extra
+
+        // GRAFO 2 (idéntica estructura, distinto orden de vértices)
+        GraphLink<String> grafoB = new GraphLink<>();
+        grafoB.insertVertex("W");
+        grafoB.insertVertex("X");
+        grafoB.insertVertex("Y");
+        grafoB.insertVertex("Z");
+
+        grafoB.insertEdge("W", "X");
+        grafoB.insertEdge("X", "Y");
+        grafoB.insertEdge("Y", "Z");
+        grafoB.insertEdge("Z", "W");
+        grafoB.insertEdge("W", "Y");
+
+        // ANALIZAMOS grafoA
+        System.out.println("Análisis del grafo A:");
+        System.out.println("¿Es fuertemente conexo? " + RepresentacionGrafoDirigido.esConexoDirigido(grafoA));
+        System.out.println("¿Es plano? " + RepresentacionGrafoDirigido.esPlano(grafoA));
+        System.out.println("¿Es auto-complementario? " + RepresentacionGrafoDirigido.esAutoComplementario(grafoA));
+        System.out.println("¿Es isomorfo con grafo B? " + RepresentacionGrafoDirigido.esIsomorfo(grafoA, grafoB));
+
     }
 
 }
