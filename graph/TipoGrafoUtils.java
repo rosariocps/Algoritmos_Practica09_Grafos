@@ -168,4 +168,98 @@ public class TipoGrafoUtils {
         }
 
     }
+
+    // GRADO DE ENTRADA (cuántas aristas llegan al vértice v)
+    public static <E> int gradoEntrada(GraphLink<E> grafo, E v) {
+        int grado = 0;
+        Vertex<E> destino = grafo.searchVertex(v);
+        if (destino == null) return -1;
+
+        Nodo<Vertex<E>> actual = grafo.listVertex.getFirst();
+        while (actual != null) {
+            Nodo<Edge<E>> arista = actual.getData().listAdj.getFirst();
+            while (arista != null) {
+                if (arista.getData().getRefDest().equals(destino)) {
+                    grado++;
+                }
+                arista = arista.getNext();
+            }
+            actual = actual.getNext();
+        }
+
+        return grado;
+    }
+
+    // GRADO DE SALIDA (cuántas aristas salen del vértice v)
+    public static <E> int gradoSalida(GraphLink<E> grafo, E v) {
+        Vertex<E> origen = grafo.searchVertex(v);
+        if (origen == null) return -1;
+        return origen.listAdj.length();
+    }
+
+    // CAMINO DIRIGIDO (A → B → C → ... → Z, sin ciclos)
+    public static <E> boolean esCaminoDirigido(GraphLink<E> grafo) {
+        int gradoEntrada1 = 0;
+        int gradoSalida1 = 0;
+
+        Nodo<Vertex<E>> actual = grafo.listVertex.getFirst();
+        while (actual != null) {
+            E dato = actual.getData().getData();
+            int entrada = gradoEntrada(grafo, dato);
+            int salida = gradoSalida(grafo, dato);
+
+            if (entrada == 0 && salida == 1) {
+                gradoEntrada1++; // nodo de inicio
+            } else if (entrada == 1 && salida == 0) {
+                gradoSalida1++; // nodo de fin
+            } else if (!(entrada == 1 && salida == 1)) {
+                return false; // nodo intermedio no cumple
+            }
+
+            actual = actual.getNext();
+        }
+
+        return gradoEntrada1 == 1 && gradoSalida1 == 1;
+    }
+
+    // CICLO DIRIGIDO (cada nodo tiene entrada y salida 1)
+    public static <E> boolean esCicloDirigido(GraphLink<E> grafo) {
+        Nodo<Vertex<E>> actual = grafo.listVertex.getFirst();
+        while (actual != null) {
+            E dato = actual.getData().getData();
+            if (gradoEntrada(grafo, dato) != 1 || gradoSalida(grafo, dato) != 1) {
+                return false;
+            }
+            actual = actual.getNext();
+        }
+        return true;
+    }
+
+    // RUEDA DIRIGIDA (centro → todos los demás, y los demás conectados entre sí en ciclo)
+    public static <E> boolean esRuedaDirigida(GraphLink<E> grafo) {
+        int n = grafo.listVertex.length();
+        int centro = 0;
+        int ciclo = 0;
+
+        Nodo<Vertex<E>> actual = grafo.listVertex.getFirst();
+        while (actual != null) {
+            E dato = actual.getData().getData();
+            int entrada = gradoEntrada(grafo, dato);
+            int salida = gradoSalida(grafo, dato);
+
+            if (salida == n - 1 && entrada == 0) {
+                centro++; // nodo central
+            } else if (entrada == 2 && salida == 2) {
+                ciclo++; // nodo del anillo
+            } else {
+                return false;
+            }
+
+            actual = actual.getNext();
+        }
+
+        return centro == 1 && ciclo == n - 1;
+    }
+
+
 }

@@ -148,7 +148,7 @@ public class TestGraph {
         grafoTipo.insertEdge("B", "C");
         grafoTipo.insertEdge("C", "D");
         grafoTipo.insertEdge("D", "A"); // esto forma un ciclo (C4)
-/* 
+ 
         System.out.println("Grado de A: " + TipoGrafoUtils.gradoNodo(grafoTipo, "A"));
         System.out.println("¿Es Camino? " + TipoGrafoUtils.esCamino(grafoTipo));
         System.out.println("¿Es Ciclo? " + TipoGrafoUtils.esCiclo(grafoTipo));
@@ -177,6 +177,35 @@ public class TestGraph {
         // c) matriz de adyacencia
         System.out.println("\n- Matriz de adyacencia:");
         TipoGrafoUtils.mostrarMatrizAdyacencia(grafoRep);
-*/
+
+
+        // === EJERCICIO 7: GRAFO DIRIGIDO - GRADOS Y TIPO ===
+        System.out.println("\n=== EJERCICIO 7: GRAFO DIRIGIDO ===");
+
+        GraphLink<String> grafoDir = new GraphLink<>();
+        grafoDir.insertVertex("A");
+        grafoDir.insertVertex("B");
+        grafoDir.insertVertex("C");
+        grafoDir.insertVertex("D");
+
+        // Grafo dirigido tipo ciclo A → B → C → D → A
+        grafoDir.insertEdge("A", "B");
+        grafoDir.insertEdge("B", "C");
+        grafoDir.insertEdge("C", "D");
+        grafoDir.insertEdge("D", "A");
+
+        // Mostrar grados de entrada y salida
+        for (String v : new String[]{"A", "B", "C", "D"}) {
+            int entrada = TipoGrafoUtils.gradoEntrada(grafoDir, v);
+            int salida = TipoGrafoUtils.gradoSalida(grafoDir, v);
+            System.out.println("Vértice " + v + ": entrada=" + entrada + ", salida=" + salida);
+        }
+
+        // Verificar tipo de grafo dirigido
+        System.out.println("\n¿Es Camino Dirigido? " + TipoGrafoUtils.esCaminoDirigido(grafoDir));
+        System.out.println("¿Es Ciclo Dirigido? " + TipoGrafoUtils.esCicloDirigido(grafoDir));
+        System.out.println("¿Es Rueda Dirigida? " + TipoGrafoUtils.esRuedaDirigida(grafoDir));
+
     }
+
 }
