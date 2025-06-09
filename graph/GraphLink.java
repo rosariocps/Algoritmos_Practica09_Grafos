@@ -303,5 +303,27 @@ public class GraphLink<E> {
         return camino;
     }
 
+    // MÉTODO INSERT EDGE WEIGHT (inserta una arista no dirigida con peso entre los vértices v y z)
+    public void insertEdgeWeight(E v, E z, int w) {
+        Vertex<E> origen = searchVertex(v);
+        Vertex<E> destino = searchVertex(z);
+
+        if (origen == null || destino == null) {
+            throw new RuntimeException("Uno o ambos vértices no existen.");
+        }
+
+        if (searchEdge(v, z)) {
+            System.out.println("La arista ya existe entre " + v + " y " + z);
+            return;
+        }
+
+        Edge<E> nuevoEdgeDestino = new Edge<>(destino, w);
+        origen.listAdj.insertLast(nuevoEdgeDestino);
+
+        Edge<E> nuevoEdgeOrigen = new Edge<>(origen, w);
+        destino.listAdj.insertLast(nuevoEdgeOrigen);
+    }
+
+
 
 }

@@ -114,7 +114,7 @@ public class TestGraph {
         grafoTipo.insertEdge("B", "C");
         grafoTipo.insertEdge("C", "D");
         grafoTipo.insertEdge("D", "A"); // esto forma un ciclo (C4)
-
+/* 
         System.out.println("Grado de A: " + TipoGrafoUtils.gradoNodo(grafoTipo, "A"));
         System.out.println("¿Es Camino? " + TipoGrafoUtils.esCamino(grafoTipo));
         System.out.println("¿Es Ciclo? " + TipoGrafoUtils.esCiclo(grafoTipo));
@@ -143,6 +143,6 @@ public class TestGraph {
         // c) matriz de adyacencia
         System.out.println("\n- Matriz de adyacencia:");
         TipoGrafoUtils.mostrarMatrizAdyacencia(grafoRep);
-
+*/
     }
 }
