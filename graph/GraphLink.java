@@ -122,7 +122,7 @@ public class GraphLink<E> {
         Nodo<Vertex<E>> current = listVertex.getFirst();
         // recorremos todos los vertices del grafo
         while (current != null) {
-            // eliminamos cualquier arista que apunte al vertice a eliminar
+            // en el nodo actual (vertice) buscamos en su lista de adyacencia el vertice a eliminar
             current.getData().listAdj.removeNodo(new Edge<>(vertexToRemove));
             // pasamos al siguiente vertice
             current = current.getNext();
@@ -160,7 +160,7 @@ public class GraphLink<E> {
             pila.push(start); // agregamos el vertice inicial a la pila
             while (!pila.isEmpty()) {
                 Vertex<E> actual = pila.pop(); // sacamos el ultimo vertice agregado
-                if (visitados.search(actual) == -1) {
+                if (visitados.search(actual) == -1) {// si no fue visitado
                     System.out.print(actual.getData() + " "); // mostramos el dato del vertice
                     visitados.insertLast(actual); // lo marcamos como visitado
                     Nodo<Edge<E>> adyacente = actual.listAdj.getFirst(); // recorremos sus aristas
