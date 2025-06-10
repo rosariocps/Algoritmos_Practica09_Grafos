@@ -234,7 +234,61 @@ public class TestGraph {
         System.out.println("¿Es ciclo dirigido? " + TipoGrafoUtils.esCicloDirigido(grafo10));
         System.out.println("¿Es rueda dirigida? " + TipoGrafoUtils.esRuedaDirigida(grafo10));
 
+        // ---------- EJERCICIO 8 ----------
+        System.out.println("===== EJERCICIO 8 - GRAFO NO DIRIGIDO =====");
+        GraphListEdgeListaEnlazada<String, String> grafo11 = new GraphListEdgeListaEnlazada<>();
+        grafo11.insertVertex("A");
+        grafo11.insertVertex("B");
+        grafo11.insertVertex("C");
+        grafo11.insertVertex("D");
 
+        grafo11.insertEdge("A", "B");
+        grafo11.insertEdge("A", "C");
+        grafo11.insertEdge("B", "D");
+        grafo11.insertEdge("C", "D");
+
+        TipoGrafoUtils.mostrarFormal(grafo11);
+        System.out.println();
+        TipoGrafoUtils.mostrarListaAdyacencia(grafo11);
+        System.out.println();
+        TipoGrafoUtils.mostrarMatrizAdyacencia(grafo11);
+
+        // ---------- EJERCICIO 9 ----------
+        System.out.println("\n===== EJERCICIO 9 - PROPIEDADES DE GRAFOS DIRIGIDOS =====");
+
+        // Grafo 1
+        GraphListEdgeListaEnlazada<String, String> grafo12 = new GraphListEdgeListaEnlazada<>();
+        grafo12.insertVertex("X");
+        grafo12.insertVertex("Y");
+        grafo12.insertVertex("Z");
+
+        grafo12.insertEdge("X", "Y");
+        grafo12.insertEdge("Y", "Z");
+
+        // Grafo 2 (idéntico a grafo12 para probar isomorfismo)
+        GraphListEdgeListaEnlazada<String, String> grafo13 = new GraphListEdgeListaEnlazada<>();
+        grafo13.insertVertex("X");
+        grafo13.insertVertex("Y");
+        grafo13.insertVertex("Z");
+
+        grafo13.insertEdge("X", "Y");
+        grafo13.insertEdge("Y", "Z");
+
+        System.out.println("¿grafo12 es isomorfo con grafo13? " + TipoGrafoUtils.isIsomorfo(grafo12, grafo13));
+        System.out.println("¿grafo12 es plano? " + TipoGrafoUtils.esPlano(grafo12));
+        System.out.println("¿grafo12 es conexo? " + TipoGrafoUtils.esConexo(grafo12));
+        System.out.println("¿grafo12 es auto-complementario? " + TipoGrafoUtils.esAutoComplementario(grafo12));
+
+        // Grafo 3 (no conexo)
+        GraphListEdgeListaEnlazada<String, String> grafo14 = new GraphListEdgeListaEnlazada<>();
+        grafo14.insertVertex("A");
+        grafo14.insertVertex("B");
+        grafo14.insertVertex("C");
+
+        grafo14.insertEdge("A", "B");
+        // No hay conexión con "C"
+
+        System.out.println("\n¿grafo14 es conexo? " + TipoGrafoUtils.esConexo(grafo14));
  
     }
 
