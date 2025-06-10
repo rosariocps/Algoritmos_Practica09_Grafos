@@ -6,6 +6,10 @@ import linkedlist.Nodo;
 
 public class TipoGrafoUtils {
 
+    // ------------ EJERCICIO 5: GRAFO NO DIRIGIDO ------------
+    //IDENTIFICACIÓN DE TIPOS (Grado, Camino, Ciclo, Rueda, Completo)
+
+
     // metodo para obtener el grado de un nodo
     public static <E> int gradoNodo(GraphLink<E> grafo, E nodo) {
         Vertex<E> v = grafo.searchVertex(nodo); // buscamos el vertice con el dato
@@ -71,6 +75,9 @@ public class TipoGrafoUtils {
         }
         return true; // si todos tienen conexiones completas, es completo
     }
+
+    // ------------ EJERCICIO 6: GRAFO NO DIRIGIDO ------------
+    // REPRESENTACIÓN FORMAL, LISTA DE ADYACENCIA Y MATRIZ DE ADYACENCIA
 
     // metodo para mostrar definicion formal del grafo
     public static <E> void mostrarFormal(GraphLink<E> grafo) {
@@ -171,6 +178,9 @@ public class TipoGrafoUtils {
 
     }
 
+    // ------------ EJERCICIO 7: GRAFO DIRIGIDO ------------
+    // IDENTIFICACIÓN DE TIPOS (Grado, Camino, Ciclo, Rueda) USANDO GraphLink Y GraphListEdge
+
     // GRADO DE ENTRADA (cuántas aristas llegan al vértice v)
     public static <E> int gradoEntrada(GraphLink<E> grafo, E v) {
         int grado = 0;
@@ -263,7 +273,8 @@ public class TipoGrafoUtils {
         return centro == 1 && ciclo == n - 1;
     }
 
-    // ==== MÉTODOS DE REPRESENTACIÓN ====
+    // ------------ EJERCICIO 8: GRAFO NO DIRIGIDO ------------
+    // REPRESENTACIÓN FORMAL, LISTA Y MATRIZ (USANDO GraphLink Y GraphListEdge)
 
     // FORMA FORMAL: muestra vértices y aristas dirigidas
     public static <E> void mostrarFormalDirigida(GraphLink<E> grafo) {
