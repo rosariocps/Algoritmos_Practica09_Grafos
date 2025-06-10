@@ -218,13 +218,13 @@ public class TestGraph {
         grafoDirRep.insertEdge("Y", "Z");
 
         System.out.println("\n- Forma formal:");
-        RepresentacionGrafoDirigido.mostrarFormal(grafoDirRep);
+        TipoGrafoUtils.mostrarFormalDirigida(grafoDirRep);
 
         System.out.println("\n- Lista de adyacencia:");
-        RepresentacionGrafoDirigido.mostrarListaAdyacencia(grafoDirRep);
+        TipoGrafoUtils.mostrarListaAdyacenciaDirigida(grafoDirRep);
 
         System.out.println("\n- Matriz de adyacencia:");
-        RepresentacionGrafoDirigido.mostrarMatrizAdyacencia(grafoDirRep);
+        TipoGrafoUtils.mostrarMatrizAdyacenciaDirigida(grafoDirRep);
 
         // ==== EJERCICIO 9: Análisis de Grafos Dirigidos ====
         System.out.println("\n==== EJERCICIO 9: Análisis de Grafos Dirigidos ====");
@@ -256,10 +256,10 @@ public class TestGraph {
 
         // ANALIZAMOS grafoA
         System.out.println("Análisis del grafo A:");
-        System.out.println("¿Es fuertemente conexo? " + RepresentacionGrafoDirigido.esConexoDirigido(grafoA));
-        System.out.println("¿Es plano? " + RepresentacionGrafoDirigido.esPlano(grafoA));
-        System.out.println("¿Es auto-complementario? " + RepresentacionGrafoDirigido.esAutoComplementario(grafoA));
-        System.out.println("¿Es isomorfo con grafo B? " + RepresentacionGrafoDirigido.esIsomorfo(grafoA, grafoB));
+        System.out.println("¿Es fuertemente conexo? " + TipoGrafoUtils.esConexoDirigido(grafoA));
+        System.out.println("¿Es plano? " + TipoGrafoUtils.esPlano(grafoA));
+        System.out.println("¿Es auto-complementario? " + TipoGrafoUtils.esAutoComplementario(grafoA));
+        System.out.println("¿Es isomorfo con grafo B? " + TipoGrafoUtils.esIsomorfo(grafoA, grafoB));
 
     }
 
