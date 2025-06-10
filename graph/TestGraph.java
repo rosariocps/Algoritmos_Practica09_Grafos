@@ -179,7 +179,7 @@ public class TestGraph {
         TipoGrafoUtils.mostrarMatrizAdyacencia(grafoRep);
 
 
-        // === EJERCICIO 7: GRAFO DIRIGIDO - GRADOS Y TIPO ===
+        // === EJERCICIO 7: GRAFO DIRIGIDO - GRADOS Y TIPO - GraphLink ===
         System.out.println("\n=== EJERCICIO 7: GRAFO DIRIGIDO ===");
 
         GraphLink<String> grafoDir = new GraphLink<>();
@@ -206,61 +206,36 @@ public class TestGraph {
         System.out.println("¿Es Ciclo Dirigido? " + TipoGrafoUtils.esCicloDirigido(grafoDir));
         System.out.println("¿Es Rueda Dirigida? " + TipoGrafoUtils.esRuedaDirigida(grafoDir));
 
-        // ==== EJERCICIO 9: ANÁLISIS DE GRAFO DIRIGIDO ====
-        System.out.println("\n=== EJERCICIO 8: REPRESENTACIÓN DE GRAFO DIRIGIDO ===");
+        // === EJERCICIO 7: GRAFO DIRIGIDO - GRADOS Y TIPO - GraphLinkEdge ===
+        GraphListEdgeListaEnlazada<String, String> grafo10 = new GraphListEdgeListaEnlazada<>();
 
-        GraphLink<String> grafoDirRep = new GraphLink<>();
-        grafoDirRep.insertVertex("X");
-        grafoDirRep.insertVertex("Y");
-        grafoDirRep.insertVertex("Z");
+        // Insertar vértices
+        grafo10.insertVertex("A");
+        grafo10.insertVertex("B");
+        grafo10.insertVertex("C");
+        grafo10.insertVertex("D");
 
-        grafoDirRep.insertEdge("X", "Y");
-        grafoDirRep.insertEdge("Y", "Z");
+        // Insertar aristas (ejemplo: camino dirigido A → B → C → D)
+        grafo10.insertEdge("A", "B");
+        grafo10.insertEdge("B", "C");
+        grafo10.insertEdge("C", "D");
 
-        System.out.println("\n- Forma formal:");
-        TipoGrafoUtils.mostrarFormalDirigida(grafoDirRep);
+        // Mostrar grados
+        System.out.println("Grados de entrada y salida:");
+        for (String v : new String[]{"A", "B", "C", "D"}) {
+            int entrada = TipoGrafoUtils.gradoEntrada(grafo10, v);
+            int salida = TipoGrafoUtils.gradoSalida(grafo10, v);
+            System.out.println("Vértice " + v + ": entrada = " + entrada + ", salida = " + salida);
+        }
 
-        System.out.println("\n- Lista de adyacencia:");
-        TipoGrafoUtils.mostrarListaAdyacenciaDirigida(grafoDirRep);
+        // Verificar tipo de grafo
+        System.out.println("\nTipo de grafo:");
+        System.out.println("¿Es camino dirigido? " + TipoGrafoUtils.esCaminoDirigido(grafo10));
+        System.out.println("¿Es ciclo dirigido? " + TipoGrafoUtils.esCicloDirigido(grafo10));
+        System.out.println("¿Es rueda dirigida? " + TipoGrafoUtils.esRuedaDirigida(grafo10));
 
-        System.out.println("\n- Matriz de adyacencia:");
-        TipoGrafoUtils.mostrarMatrizAdyacenciaDirigida(grafoDirRep);
 
-        // ==== EJERCICIO 9: Análisis de Grafos Dirigidos ====
-        System.out.println("\n==== EJERCICIO 9: Análisis de Grafos Dirigidos ====");
-        // GRAFO 1
-        GraphLink<String> grafoA = new GraphLink<>();
-        grafoA.insertVertex("A");
-        grafoA.insertVertex("B");
-        grafoA.insertVertex("C");
-        grafoA.insertVertex("D");
-
-        grafoA.insertEdge("A", "B");
-        grafoA.insertEdge("B", "C");
-        grafoA.insertEdge("C", "D");
-        grafoA.insertEdge("D", "A"); // cierra el ciclo
-        grafoA.insertEdge("A", "C"); // extra
-
-        // GRAFO 2 (idéntica estructura, distinto orden de vértices)
-        GraphLink<String> grafoB = new GraphLink<>();
-        grafoB.insertVertex("W");
-        grafoB.insertVertex("X");
-        grafoB.insertVertex("Y");
-        grafoB.insertVertex("Z");
-
-        grafoB.insertEdge("W", "X");
-        grafoB.insertEdge("X", "Y");
-        grafoB.insertEdge("Y", "Z");
-        grafoB.insertEdge("Z", "W");
-        grafoB.insertEdge("W", "Y");
-
-        // ANALIZAMOS grafoA
-        System.out.println("Análisis del grafo A:");
-        System.out.println("¿Es fuertemente conexo? " + TipoGrafoUtils.esConexoDirigido(grafoA));
-        System.out.println("¿Es plano? " + TipoGrafoUtils.esPlano(grafoA));
-        System.out.println("¿Es auto-complementario? " + TipoGrafoUtils.esAutoComplementario(grafoA));
-        System.out.println("¿Es isomorfo con grafo B? " + TipoGrafoUtils.esIsomorfo(grafoA, grafoB));
-
+ 
     }
 
 }

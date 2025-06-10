@@ -47,6 +47,7 @@ public class GraphLink<E> {
         origen.listAdj.insertLast(nuevoEdge1);
         destino.listAdj.insertLast(nuevoEdge2);
     }
+    
     //metodo sobrecargado - varios metodos con el mismo nombre pero con diferentes parametros
     //version sin peso como adicional
     public void insertEdge(E verOri, E verDes) {

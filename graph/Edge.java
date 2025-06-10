@@ -3,6 +3,7 @@ package graph;
 public class Edge<E> {
     private Vertex<E> refDest; //referencia al vertice destino
     private int weight;
+    
     //constructor en tal caso no le des un peso
     public Edge(Vertex<E> refDest) {
         this(refDest, -1); //asigna un peso por defecto de -1

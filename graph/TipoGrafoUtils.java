@@ -1,6 +1,5 @@
 package graph;
 
-import actividad2.QueueLink;
 import linkedlist.ListaEnlazada;
 import linkedlist.Nodo;
 
@@ -8,7 +7,6 @@ public class TipoGrafoUtils {
 
     // ------------ EJERCICIO 5: GRAFO NO DIRIGIDO ------------
     //IDENTIFICACIÓN DE TIPOS (Grado, Camino, Ciclo, Rueda, Completo)
-
 
     // metodo para obtener el grado de un nodo
     public static <E> int gradoNodo(GraphLink<E> grafo, E nodo) {
@@ -179,7 +177,7 @@ public class TipoGrafoUtils {
     }
 
     // ------------ EJERCICIO 7: GRAFO DIRIGIDO ------------
-    // IDENTIFICACIÓN DE TIPOS (Grado, Camino, Ciclo, Rueda) USANDO GraphLink Y GraphListEdge
+    // IDENTIFICACIÓN DE TIPOS (Grado, Camino, Ciclo, Rueda) USANDO GraphLink
 
     // GRADO DE ENTRADA (cuántas aristas llegan al vértice v)
     public static <E> int gradoEntrada(GraphLink<E> grafo, E v) {
@@ -209,7 +207,7 @@ public class TipoGrafoUtils {
         return origen.listAdj.length();
     }
 
-    // CAMINO DIRIGIDO (A → B → C → ... → Z, sin ciclos)
+    // CAMINO DIRIGIDO (A -> B -> C ->  ... -> Z, sin ciclos)
     public static <E> boolean esCaminoDirigido(GraphLink<E> grafo) {
         int gradoEntrada1 = 0;
         int gradoSalida1 = 0;
@@ -273,195 +271,388 @@ public class TipoGrafoUtils {
         return centro == 1 && ciclo == n - 1;
     }
 
-    // ------------ EJERCICIO 8: GRAFO NO DIRIGIDO ------------
-    // REPRESENTACIÓN FORMAL, LISTA Y MATRIZ (USANDO GraphLink Y GraphListEdge)
+    // ------------ EJERCICIO 7: GRAFO DIRIGIDO ------------
+    // IDENTIFICACIÓN DE TIPOS (Grado, Camino, Ciclo, Rueda) USANDO GraphListEdgeListaEnlazada
 
-    // FORMA FORMAL: muestra vértices y aristas dirigidas
-    public static <E> void mostrarFormalDirigida(GraphLink<E> grafo) {
-        System.out.print("V = { ");
-        Nodo<Vertex<E>> current = grafo.listVertex.getFirst();
-        while (current != null) {
-            System.out.print(current.getData().getData());
-            if (current.getNext() != null) System.out.print(", ");
-            current = current.getNext();
-        }
-        System.out.println(" }");
+    // GRADO DE ENTRADA: cuántas aristas llegan al vértice v
+    public static <V, E> int gradoEntrada(GraphListEdgeListaEnlazada<V, E> grafo, V v) {
+        int grado = 0;
 
-        System.out.print("E = { ");
-        Nodo<Vertex<E>> origen = grafo.listVertex.getFirst();
-        boolean primero = true;
-        while (origen != null) {
-            Nodo<Edge<E>> arista = origen.getData().listAdj.getFirst();
-            while (arista != null) {
-                if (!primero) System.out.print(", ");
-                System.out.print("(" + origen.getData().getData() + " -> " +
-                        arista.getData().getRefDest().getData() + ")");
-                primero = false;
-                arista = arista.getNext();
-            }
-            origen = origen.getNext();
-        }
-        System.out.println(" }");
-    }
-
-    // LISTA DE ADYACENCIA DIRIGIDA
-    public static <E> void mostrarListaAdyacenciaDirigida(GraphLink<E> grafo) {
-        Nodo<Vertex<E>> actual = grafo.listVertex.getFirst();
+        Nodo<EdgeObj<V, E>> actual = grafo.secEdge.getFirst();
         while (actual != null) {
-            System.out.print(actual.getData().getData() + " -> ");
-            Nodo<Edge<E>> arista = actual.getData().listAdj.getFirst();
-            while (arista != null) {
-                System.out.print(arista.getData().getRefDest().getData());
-                if (arista.getNext() != null) System.out.print(" ");
-                arista = arista.getNext();
+            EdgeObj<V, E> arista = actual.getData();
+            if (arista.endVertex2.info.equals(v)) {
+                grado++;
             }
-            System.out.println();
             actual = actual.getNext();
         }
+
+        return grado;
     }
 
-    // MATRIZ DE ADYACENCIA DIRIGIDA
-    public static <E> void mostrarMatrizAdyacenciaDirigida(GraphLink<E> grafo) {
-        int n = grafo.listVertex.length();
-        Vertex<E>[] vertices = new Vertex[n];
+    // GRADO DE SALIDA: cuántas aristas salen del vértice v
+    public static <V, E> int gradoSalida(GraphListEdgeListaEnlazada<V, E> grafo, V v) {
+        int grado = 0;
 
-        Nodo<Vertex<E>> current = grafo.listVertex.getFirst();
+        Nodo<EdgeObj<V, E>> actual = grafo.secEdge.getFirst();
+        while (actual != null) {
+            EdgeObj<V, E> arista = actual.getData();
+            if (arista.endVertex1.info.equals(v)) {
+                grado++;
+            }
+            actual = actual.getNext();
+        }
+
+        return grado;
+    }
+
+    // CAMINO DIRIGIDO: un nodo con entrada=0 y salida=1 (inicio),
+    // otro con entrada=1 y salida=0 (fin), el resto con entrada=1 y salida=1
+    public static <V, E> boolean esCaminoDirigido(GraphListEdgeListaEnlazada<V, E> grafo) {
+        int gradoEntrada1 = 0;
+        int gradoSalida1 = 0;
+
+        Nodo<VertexObj<V, E>> actual = grafo.secVertex.getFirst();
+        while (actual != null) {
+            V dato = actual.getData().info;
+            int entrada = gradoEntrada(grafo, dato);
+            int salida = gradoSalida(grafo, dato);
+
+            if (entrada == 0 && salida == 1) {
+                gradoEntrada1++; // nodo de inicio
+            } else if (entrada == 1 && salida == 0) {
+                gradoSalida1++; // nodo de fin
+            } else if (!(entrada == 1 && salida == 1)) {
+                return false; // nodo intermedio no cumple
+            }
+
+            actual = actual.getNext();
+        }
+
+        return gradoEntrada1 == 1 && gradoSalida1 == 1;
+    }
+
+    // CICLO DIRIGIDO: todos los nodos con entrada=1 y salida=1
+    public static <V, E> boolean esCicloDirigido(GraphListEdgeListaEnlazada<V, E> grafo) {
+        Nodo<VertexObj<V, E>> actual = grafo.secVertex.getFirst();
+        while (actual != null) {
+            V dato = actual.getData().info;
+            if (gradoEntrada(grafo, dato) != 1 || gradoSalida(grafo, dato) != 1) {
+                return false;
+            }
+            actual = actual.getNext();
+        }
+        return true;
+    }
+
+    // RUEDA DIRIGIDA: un nodo con salida=n-1 y entrada=0 (centro),
+    // y n-1 nodos con entrada=2 y salida=2 (círculo)
+    public static <V, E> boolean esRuedaDirigida(GraphListEdgeListaEnlazada<V, E> grafo) {
+        int n = grafo.secVertex.length();
+        int centro = 0;
+        int ciclo = 0;
+
+        Nodo<VertexObj<V, E>> actual = grafo.secVertex.getFirst();
+        while (actual != null) {
+            V dato = actual.getData().info;
+            int entrada = gradoEntrada(grafo, dato);
+            int salida = gradoSalida(grafo, dato);
+
+            if (salida == n - 1 && entrada == 0) {
+                centro++; // nodo central
+            } else if (entrada == 2 && salida == 2) {
+                ciclo++; // nodo del anillo
+            } else {
+                return false;
+            }
+
+            actual = actual.getNext();
+        }
+
+        return centro == 1 && ciclo == n - 1;
+    }
+
+    // ------------ EJERCICIO 8: GRAFO NO DIRIGIDO ------------
+    // REPRESENTACIÓN FORMAL, LISTA DE ADYACENCIA Y MATRIZ DE ADYACENCIA USANDO GraphListEdgeListaEnlazada
+
+    // FORMA FORMAL: muestra vértices y aristas no dirigidas
+    public static <V, E> void mostrarFormal(GraphListEdgeListaEnlazada<V, E> grafo) {
+        System.out.println("definicion formal:");
+        
+        // Mostrar vértices
+        System.out.print("v = { ");
+        Nodo<VertexObj<V, E>> current = grafo.secVertex.getFirst();
+        while (current != null) {
+            System.out.print(current.getData().info + " ");
+            current = current.getNext();
+        }
+        System.out.println("}");
+
+        // Mostrar aristas (no dirigidas, evitar duplicados)
+        System.out.print("e = { ");
+        Nodo<EdgeObj<V, E>> edge = grafo.secEdge.getFirst();
+        while (edge != null) {
+            V v1 = edge.getData().endVertex1.info;
+            V v2 = edge.getData().endVertex2.info;
+
+            // Solo mostrar una vez (por orden alfabético / numérico)
+            if (v1.toString().compareTo(v2.toString()) < 0) {
+                System.out.print("(" + v1 + "," + v2 + ") ");
+            }
+            edge = edge.getNext();
+        }
+        System.out.println("}");
+    }
+
+    // LISTA DE ADYACENCIA: muestra cada vértice con sus vecinos
+    public static <V, E> void mostrarListaAdyacencia(GraphListEdgeListaEnlazada<V, E> grafo) {
+        System.out.println("lista de adyacencia:");
+        Nodo<VertexObj<V, E>> nodoV = grafo.secVertex.getFirst();
+
+        while (nodoV != null) {
+            V actual = nodoV.getData().info;
+            System.out.print(actual + " -> ");
+
+            Nodo<EdgeObj<V, E>> nodoE = grafo.secEdge.getFirst();
+            while (nodoE != null) {
+                EdgeObj<V, E> arista = nodoE.getData();
+                if (arista.endVertex1.info.equals(actual)) {
+                    System.out.print(arista.endVertex2.info + " ");
+                } else if (arista.endVertex2.info.equals(actual)) {
+                    System.out.print(arista.endVertex1.info + " ");
+                }
+                nodoE = nodoE.getNext();
+            }
+
+            System.out.println();
+            nodoV = nodoV.getNext();
+        }
+    }
+
+    // MATRIZ DE ADYACENCIA: matriz simétrica de conexiones 0 o 1
+    public static <V, E> void mostrarMatrizAdyacencia(GraphListEdgeListaEnlazada<V, E> grafo) {
+        int n = grafo.secVertex.length();
+        VertexObj<V, E>[] vertices = new VertexObj[n];
+
+        // Guardar vértices en array
+        Nodo<VertexObj<V, E>> current = grafo.secVertex.getFirst();
         int i = 0;
         while (current != null) {
             vertices[i++] = current.getData();
             current = current.getNext();
         }
 
+        // Encabezado
+        System.out.println("matriz de adyacencia:");
         System.out.print("    ");
         for (i = 0; i < n; i++) {
-            System.out.print(vertices[i].getData() + " ");
+            System.out.print(vertices[i].info + " ");
         }
         System.out.println();
 
+        // Contenido
         for (i = 0; i < n; i++) {
-            System.out.print(vertices[i].getData() + " | ");
+            System.out.print(vertices[i].info + " ");
             for (int j = 0; j < n; j++) {
                 boolean conectado = false;
-                Nodo<Edge<E>> arista = vertices[i].listAdj.getFirst();
+
+                Nodo<EdgeObj<V, E>> arista = grafo.secEdge.getFirst();
                 while (arista != null) {
-                    if (arista.getData().getRefDest().equals(vertices[j])) {
+                    V a = arista.getData().endVertex1.info;
+                    V b = arista.getData().endVertex2.info;
+
+                    if ((a.equals(vertices[i].info) && b.equals(vertices[j].info)) ||
+                        (a.equals(vertices[j].info) && b.equals(vertices[i].info))) {
                         conectado = true;
                         break;
                     }
                     arista = arista.getNext();
                 }
-                System.out.print((conectado ? "1" : "0") + " ");
+
+                System.out.print("  " + (conectado ? "1" : "0") + " ");
             }
             System.out.println();
         }
     }
 
-    // ==== EJERCICIO 9: ANÁLISIS DE GRAFO DIRIGIDO ====
+    // ------------ EJERCICIO 9: GRAFO DIRIGIDO - GraphLink ------------
 
-    // CONEXO DIRIGIDO (fuertemente conexo: de todo vértice hay camino hacia todos los demás)
-    public static <E> boolean esConexoDirigido(GraphLink<E> grafo) {
-        Nodo<Vertex<E>> nodoActual = grafo.listVertex.getFirst();
-
-        while (nodoActual != null) {
-            Vertex<E> origen = nodoActual.getData();
-
-            ListaEnlazada<Vertex<E>> visitados = new ListaEnlazada<>();
-            QueueLink<Vertex<E>> cola = new QueueLink<>();
-            cola.enqueue(origen);
-            visitados.insertLast(origen);
-
-            while (!cola.isEmpty()) {
-                try {
-                    Vertex<E> actual = cola.dequeue();
-                    Nodo<Edge<E>> arista = actual.listAdj.getFirst();
-                    while (arista != null) {
-                        Vertex<E> vecino = arista.getData().getRefDest();
-                        if (visitados.search(vecino) == -1) {
-                            cola.enqueue(vecino);
-                            visitados.insertLast(vecino);
-                        }
-                        arista = arista.getNext();
-                    }
-                } catch (Exception e) {
-                    return false;
-                }
-            }
-
-            if (visitados.length() < grafo.listVertex.length()) {
-                return false;
-            }
-
-            nodoActual = nodoActual.getNext();
-        }
-
-        return true;
-    }
-
-    // PLANO DIRIGIDO (usa la fórmula de Euler modificada: e ≤ 3v - 6)
-    public static <E> boolean esPlano(GraphLink<E> grafo) {
-        int v = grafo.listVertex.length();
-        int e = contarTotalAristas(grafo);
-        return e <= 3 * v - 6;
-    }
-
-    // Método auxiliar para contar aristas
-    private static <E> int contarTotalAristas(GraphLink<E> grafo) {
-        int total = 0;
-        Nodo<Vertex<E>> current = grafo.listVertex.getFirst();
-        while (current != null) {
-            total += current.getData().listAdj.length();
-            current = current.getNext();
-        }
-        return total;
-    }
-
-    // ISOMORFO (versión simplificada: compara estructura exacta)
-    public static <E> boolean esIsomorfo(GraphLink<E> g1, GraphLink<E> g2) {
+    // ISOMORFO: compara dos grafos si tienen mismos vértices y conexiones (por nombre)
+    public static <E> boolean isIsomorfo(GraphLink<E> g1, GraphLink<E> g2) {
         if (g1.listVertex.length() != g2.listVertex.length()) return false;
-        if (contarTotalAristas(g1) != contarTotalAristas(g2)) return false;
+        
+        Nodo<Vertex<E>> v1 = g1.listVertex.getFirst();
+        while (v1 != null) {
+            if (g2.searchVertex(v1.getData().getData()) == null) return false;
+            v1 = v1.getNext();
+        }
 
-        Nodo<Vertex<E>> nodo1 = g1.listVertex.getFirst();
-        Nodo<Vertex<E>> nodo2 = g2.listVertex.getFirst();
-
-        while (nodo1 != null && nodo2 != null) {
-            ListaEnlazada<Edge<E>> ady1 = nodo1.getData().listAdj;
-            ListaEnlazada<Edge<E>> ady2 = nodo2.getData().listAdj;
-            if (ady1.length() != ady2.length()) return false;
-            nodo1 = nodo1.getNext();
-            nodo2 = nodo2.getNext();
+        Nodo<Vertex<E>> u1 = g1.listVertex.getFirst();
+        while (u1 != null) {
+            E dato = u1.getData().getData();
+            Nodo<Edge<E>> a1 = u1.getData().listAdj.getFirst();
+            while (a1 != null) {
+                E destino = a1.getData().getRefDest().getData();
+                if (!g2.searchEdge(dato, destino)) return false;
+                a1 = a1.getNext();
+            }
+            u1 = u1.getNext();
         }
 
         return true;
     }
 
-    // AUTO COMPLEMENTARIO (el complemento es isomorfo al grafo original)
-    public static <E> boolean esAutoComplementario(GraphLink<E> grafo) {
-        GraphLink<E> complemento = new GraphLink<>();
-
-        // Clonar vértices
-        Nodo<Vertex<E>> current = grafo.listVertex.getFirst();
-        while (current != null) {
-            complemento.insertVertex(current.getData().getData());
-            current = current.getNext();
+    // PLANO: heurística usando fórmula de Kuratowski para grafos dirigidos
+    // Si m <= 3n - 6 (n >= 3), se asume plano (simplificación)
+    public static <E> boolean esPlano(GraphLink<E> grafo) {
+        int n = grafo.listVertex.length();
+        int m = 0;
+        Nodo<Vertex<E>> actual = grafo.listVertex.getFirst();
+        while (actual != null) {
+            m += actual.getData().listAdj.length();
+            actual = actual.getNext();
         }
 
-        // Insertar solo las aristas que NO existen en el grafo original
-        Nodo<Vertex<E>> origen = grafo.listVertex.getFirst();
-        while (origen != null) {
-            Nodo<Vertex<E>> destino = grafo.listVertex.getFirst();
-            while (destino != null) {
-                E datoOrigen = origen.getData().getData();
-                E datoDestino = destino.getData().getData();
-                if (!datoOrigen.equals(datoDestino) && !grafo.searchEdge(datoOrigen, datoDestino)) {
-                    complemento.insertEdge(datoOrigen, datoDestino);
-                }
-                destino = destino.getNext();
-            }
-            origen = origen.getNext();
-        }
-
-        return esIsomorfo(grafo, complemento);
+        return n < 3 || m <= 3 * n - 6;
     }
 
+    // CONEXO: todos los vértices deben ser alcanzables desde cualquiera (DFS desde el primero)
+    public static <E> boolean esConexo(GraphLink<E> grafo) {
+        ListaEnlazada<Vertex<E>> visitados = new ListaEnlazada<>();
+        Vertex<E> inicio = grafo.listVertex.getFirst().getData();
+        dfsVisit(grafo, inicio, visitados);
+
+        return visitados.length() == grafo.listVertex.length();
+    }
+
+    private static <E> void dfsVisit(GraphLink<E> grafo, Vertex<E> v, ListaEnlazada<Vertex<E>> visitados) {
+        visitados.insertLast(v);
+        Nodo<Edge<E>> arista = v.listAdj.getFirst();
+        while (arista != null) {
+            Vertex<E> vecino = arista.getData().getRefDest();
+            if (visitados.search(vecino) == -1) {
+                dfsVisit(grafo, vecino, visitados);
+            }
+            arista = arista.getNext();
+        }
+    }
+
+    // AUTO COMPLEMENTARIO: eliminar todas las aristas, insertar las que faltan, comparar isomorfía
+    public static <E> boolean esAutoComplementario(GraphLink<E> grafo) {
+        GraphLink<E> complementario = new GraphLink<>();
+
+        // copiar vértices
+        Nodo<Vertex<E>> v = grafo.listVertex.getFirst();
+        while (v != null) {
+            complementario.insertVertex(v.getData().getData());
+            v = v.getNext();
+        }
+
+        // insertar aristas que NO están en el grafo original
+        Nodo<Vertex<E>> u = grafo.listVertex.getFirst();
+        while (u != null) {
+            Nodo<Vertex<E>> w = grafo.listVertex.getFirst();
+            while (w != null) {
+                E a = u.getData().getData();
+                E b = w.getData().getData();
+                if (!a.equals(b) && !grafo.searchEdge(a, b)) {
+                    complementario.insertEdge(a, b);
+                }
+                w = w.getNext();
+            }
+            u = u.getNext();
+        }
+
+        return isIsomorfo(grafo, complementario);
+    }
+
+    // ------------ EJERCICIO 9: GRAFO DIRIGIDO - GraphListEdgeListaEnlazada ------------
+
+    // ISOMORFO: compara dos grafos si tienen mismos vértices y conexiones (por nombre)
+    public static <V, E> boolean isIsomorfo(GraphListEdgeListaEnlazada<V, E> g1, GraphListEdgeListaEnlazada<V, E> g2) {
+        if (g1.secVertex.length() != g2.secVertex.length() || g1.secEdge.length() != g2.secEdge.length())
+            return false;
+
+        Nodo<VertexObj<V, E>> v1 = g1.secVertex.getFirst();
+        while (v1 != null) {
+            if (!g2.searchVertex(v1.getData().info)) return false;
+            v1 = v1.getNext();
+        }
+
+        Nodo<EdgeObj<V, E>> a1 = g1.secEdge.getFirst();
+        while (a1 != null) {
+            V from = a1.getData().endVertex1.info;
+            V to = a1.getData().endVertex2.info;
+            if (!g2.searchEdge(from, to)) return false;
+            a1 = a1.getNext();
+        }
+
+        return true;
+    }
+
+    // PLANO: usa fórmula m <= 3n - 6 (n >= 3), se asume plano si se cumple
+    public static <V, E> boolean esPlano(GraphListEdgeListaEnlazada<V, E> grafo) {
+        int n = grafo.secVertex.length();
+        int m = grafo.secEdge.length();
+        return n < 3 || m <= 3 * n - 6;
+    }
+
+    // CONEXO: todos los vértices deben ser alcanzables desde el primero (DFS)
+    public static <V, E> boolean esConexo(GraphListEdgeListaEnlazada<V, E> grafo) {
+        ListaEnlazada<VertexObj<V, E>> visitados = new ListaEnlazada<>();
+        VertexObj<V, E> inicio = grafo.secVertex.getFirst().getData();
+        dfsVisit(grafo, inicio, visitados);
+        return visitados.length() == grafo.secVertex.length();
+    }
+
+    private static <V, E> void dfsVisit(GraphListEdgeListaEnlazada<V, E> grafo, VertexObj<V, E> v, ListaEnlazada<VertexObj<V, E>> visitados) {
+        visitados.insertLast(v);
+
+        Nodo<EdgeObj<V, E>> arista = grafo.secEdge.getFirst();
+        while (arista != null) {
+            EdgeObj<V, E> e = arista.getData();
+            VertexObj<V, E> vecino = null;
+
+            if (e.endVertex1.equals(v)) {
+                vecino = e.endVertex2;
+            }
+
+            if (vecino != null && visitados.search(vecino) == -1) {
+                dfsVisit(grafo, vecino, visitados);
+            }
+
+            arista = arista.getNext();
+        }
+    }
+
+    // AUTO COMPLEMENTARIO: construir grafo complementario y comparar isomorfía
+    public static <V, E> boolean esAutoComplementario(GraphListEdgeListaEnlazada<V, E> grafo) {
+        GraphListEdgeListaEnlazada<V, E> complementario = new GraphListEdgeListaEnlazada<>();
+
+        // Copiar vértices
+        Nodo<VertexObj<V, E>> v = grafo.secVertex.getFirst();
+        while (v != null) {
+            complementario.insertVertex(v.getData().info);
+            v = v.getNext();
+        }
+
+        // Insertar solo las aristas que NO están
+        Nodo<VertexObj<V, E>> u = grafo.secVertex.getFirst();
+        while (u != null) {
+            Nodo<VertexObj<V, E>> w = grafo.secVertex.getFirst();
+            while (w != null) {
+                V a = u.getData().info;
+                V b = w.getData().info;
+
+                if (!a.equals(b) && !grafo.searchEdge(a, b)) {
+                    complementario.insertEdge(a, b);
+                }
+                w = w.getNext();
+            }
+            u = u.getNext();
+        }
+
+        return isIsomorfo(grafo, complementario);
+    }
 
 }
