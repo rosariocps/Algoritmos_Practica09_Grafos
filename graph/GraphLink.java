@@ -7,6 +7,8 @@ import ejercicio1.StackLink;
 import linkedlist.ListaEnlazada;
 import linkedlist.Nodo;
 
+// ----------------- GRAFO A PARTIR DE LISTAS ENLAZADAS -----------------
+
 public class GraphLink<E> {
     protected ListaEnlazada<Vertex<E>> listVertex;
 

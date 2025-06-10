@@ -5,11 +5,13 @@ import actividad2.QueueLink;
 import linkedlist.ListaEnlazada;
 import linkedlist.Nodo;
 
-public class GraphListEdge<V, E> {
+// ------------ EJERCICIO 3: GRAFO A PARTIR DE LISTAS DE ARISTAS (VERSION LISTAS ENLAZADAS) ------------
+
+public class GraphListEdgeListaEnlazada<V, E> {
     ListaEnlazada<VertexObj<V, E>> secVertex;
     ListaEnlazada<EdgeObj<V, E>> secEdge;
 
-    public GraphListEdge() {
+    public GraphListEdgeListaEnlazada() {
         this.secVertex = new ListaEnlazada<>();
         this.secEdge = new ListaEnlazada<>();
     }
