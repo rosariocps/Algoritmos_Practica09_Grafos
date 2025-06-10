@@ -14,6 +14,8 @@ public class GraphLink<E> {
         listVertex = new ListaEnlazada<>();
     }
 
+    // ----------------- ACTIVIDAD 2.1: GRAFO NO DIRIGIDO -----------------
+
     // INSERTAR VERTICE 
     public void insertVertex(E dato) {
         //1ro buscamos el dato en la listaVertex del grafo
@@ -104,7 +106,10 @@ public class GraphLink<E> {
         // retornamos el texto con todos los vertices y sus conexiones
         return result;
     }
-    //ELIMINAR VERTICE
+
+    // ----------------- ACTIVIDAD 2.2: GRAFO NO DIRIGIDO -----------------
+
+    //ELIMINAR VERTICE EN GRAFO NO DIRIGIDO
     public void removeVertex(E v) {
         // buscamos el vertice que contiene el dato v
         Vertex<E> vertexToRemove = searchVertex(v);
@@ -122,7 +127,7 @@ public class GraphLink<E> {
         // finalmente, eliminamos el vertice de la lista de vertices
         listVertex.removeNodo(vertexToRemove);
     }
-    //ELIMINAR ARISTA - GRAFO NO DIRIGIDO
+    //ELIMINAR ARISTA EN GRAFO NO DIRIGIDO
     public void removeEdge(E v, E z) {
         // buscamos el vertice que contiene el dato v
         Vertex<E> vertV = searchVertex(v);
@@ -135,6 +140,7 @@ public class GraphLink<E> {
         // eliminamos la arista que va de z a v (porque el grafo es no dirigido)
         vertZ.listAdj.removeNodo(new Edge<>(vertV));
     }
+    
     //RECORRIDO DE PROFUNDIDAD
     public void dfs(E v) {
         // buscamos el vertice inicial
@@ -168,6 +174,8 @@ public class GraphLink<E> {
             System.out.println("error en dfs: " + e.getMessage());
         }
     }
+
+    // ----------------- EJERCICIO 1: GRAFO NO DIRIGIDO -----------------
 
     //MÉTODO BFS (RECORRRIDO EN ANCHURA DESDE EL VERTICE "v")
     public void bfs(E v) {
@@ -209,7 +217,7 @@ public class GraphLink<E> {
         System.out.println();
     }
 
-    // Clase auxiliar para guardar pares hijo → padre
+    // Clase auxiliar para guardar pares hijo -> padre
     private class Par {
         Vertex<E> hijo;
         Vertex<E> padre;
@@ -303,6 +311,8 @@ public class GraphLink<E> {
 
         return camino;
     }
+
+    // ----------------- EJERCICIO 2: GRAFO NO DIRIGIDO PONDERADO -----------------
 
     // MÉTODO INSERT EDGE WEIGHT (inserta una arista no dirigida con peso entre los vértices v y z)
     public void insertEdgeWeight(E v, E z, int w) {
