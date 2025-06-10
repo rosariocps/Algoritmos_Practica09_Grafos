@@ -395,12 +395,12 @@ public class GraphLink<E> {
                 arista = arista.getNext();
             }
         }
-
+        //si NO tiene un padre y no es el mismo origen y destino, significa que no hay camino
         if (buscarPadre(destino, padres) == null && !origen.equals(destino)) {
             System.out.println("No existe un camino de " + v + " a " + z);
             return camino;
         }
-
+        //si se encontro un camino, reconstruirlo
         StackLink<E> pila = new StackLink<>();
         Vertex<E> actual = destino;
         while (actual != null) {
